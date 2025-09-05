@@ -1,0 +1,19 @@
+{
+  "name": "osli",
+  "version": "0.0.1",
+  "description": "Osaka Sticker Location Identifier",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lunaboppin/Osaka.git"
+  },
+  "author": "Luna",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lunaboppin/Osaka/issues"
+  },
+  "homepage": "https://github.com/lunaboppin/Osaka#readme"
+}
