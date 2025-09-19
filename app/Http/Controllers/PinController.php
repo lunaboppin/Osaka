@@ -7,8 +7,18 @@ use Illuminate\Http\Request;
 
 class PinController extends Controller
 {
-    public function index()
+    // Dedicated JSON endpoint for map
+    public function json()
     {
+        return Pin::with('user:id,name')->get();
+    }
+    public function index(Request $request)
+    {
+        // If AJAX or expects JSON, return pins as JSON for map
+        if ($request->wantsJson() || $request->ajax()) {
+            return Pin::with('user:id,name')->get();
+        }
+        // Otherwise, return Blade view for web
         $pins = Pin::with('user:id,name')->get();
         return view('pins.index', compact('pins'));
     }

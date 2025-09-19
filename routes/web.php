@@ -28,6 +28,7 @@ Route::middleware('auth')->group(function () {
     
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/pins', [\App\Http\Controllers\PinController::class, 'index'])->name('pins.index');
+    Route::get('/pins/json', [\App\Http\Controllers\PinController::class, 'json'])->name('pins.json');
     Route::get('/pins/{pin}/edit', [\App\Http\Controllers\PinController::class, 'edit'])->name('pins.edit');
     Route::put('/pins/{pin}', [\App\Http\Controllers\PinController::class, 'update'])->name('pins.update');
     Route::delete('/pins/{pin}', [\App\Http\Controllers\PinController::class, 'destroy'])->name('pins.destroy');

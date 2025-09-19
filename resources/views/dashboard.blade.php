@@ -25,8 +25,8 @@
                 center: { lat: 54.5973, lng: -5.9301 },
                 zoom: 12
             });
-            // Fetch pins from backend
-            fetch('/pins')
+            // Fetch pins from backend (JSON endpoint)
+            fetch('/pins/json')
                 .then(response => response.json())
                 .then(pins => {
                     pins.forEach(pin => {
