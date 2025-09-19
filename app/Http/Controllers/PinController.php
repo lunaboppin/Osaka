@@ -9,7 +9,7 @@ class PinController extends Controller
 {
     public function index()
     {
-        return response()->json(Pin::all());
+        return response()->json(Pin::with('user:id,name')->get());
     }
 
     public function create()
@@ -31,6 +31,8 @@ class PinController extends Controller
             $path = $request->file('photo')->store('pins', 'public');
             $validated['photo'] = $path;
         }
+
+        $validated['user_id'] = $request->user()->id;
 
         Pin::create($validated);
         return redirect()->route('dashboard')->with('success', 'Pin added!');
