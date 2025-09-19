@@ -10,8 +10,44 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     {{ __("You're logged in!") }}
+                    <!-- Google Maps Container -->
+                    <div id="map" style="height: 500px; width: 100%; margin-top: 2rem;"></div>
+                    <div id="pin-info" style="display:none; margin-top:1rem; padding:1rem; border:1px solid #e5e7eb; border-radius:0.5rem; background:#f9fafb;"></div>
                 </div>
             </div>
         </div>
     </div>
+    <!-- Google Maps JS API (replace YOUR_API_KEY with your actual key) -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDL-vgKiWDteWO3xPQj7EHUHN17rmTMVO0"></script>
+    <script>
+        let map;
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 54.5973, lng: -5.9301 },
+                zoom: 12
+            });
+            // Fetch pins from backend
+            fetch('/pins')
+                .then(response => response.json())
+                .then(pins => {
+                    pins.forEach(pin => {
+                        const marker = new google.maps.Marker({
+                            position: { lat: parseFloat(pin.latitude), lng: parseFloat(pin.longitude) },
+                            map: map,
+                            title: pin.title || ''
+                        });
+                        marker.addListener('click', function() {
+                            const infoBox = document.getElementById('pin-info');
+                            infoBox.style.display = 'block';
+                            infoBox.innerHTML = `
+                                <h3 style='font-size:1.25rem; font-weight:600; color:#374151;'>${pin.title || ''}</h3>
+                                <p style='color:#6b7280;'>${pin.description || ''}</p>
+                                <div style='font-size:0.9rem; color:#9ca3af;'>Lat: ${pin.latitude}, Lng: ${pin.longitude}</div>
+                            `;
+                        });
+                    });
+                });
+        }
+        window.onload = initMap;
+    </script>
 </x-app-layout>

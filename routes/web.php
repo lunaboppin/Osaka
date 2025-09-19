@@ -27,4 +27,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('/pins', [\App\Http\Controllers\PinController::class, 'index']);
+    Route::get('/pins/create', [\App\Http\Controllers\PinController::class, 'create'])->name('pins.create');
+    Route::post('/pins', [\App\Http\Controllers\PinController::class, 'store'])->name('pins.store');
 });
