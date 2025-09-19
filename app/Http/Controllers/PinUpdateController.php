@@ -20,6 +20,7 @@ class PinUpdateController extends Controller
             $validated['photo'] = $path;
         }
         $validated['pin_id'] = $pin->id;
+        $validated['user_id'] = $request->user()->id;
         PinUpdate::create($validated);
         return redirect()->route('pins.edit', $pin)->with('success', 'Update added!');
     }

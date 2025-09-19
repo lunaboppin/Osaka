@@ -7,7 +7,11 @@
             <img src="{{ asset('storage/' . $pin->photo) }}" alt="Pin Photo" class="rounded shadow max-h-60 max-w-full">
         </div>
     @endif
-    <h2 class="text-2xl font-bold mb-6">Edit Pin</h2>
+    <h2 class="text-2xl font-bold mb-2">Edit Pin</h2>
+    <div class="mb-4 text-gray-700 text-sm">
+        <span class="font-semibold">Originally added by:</span>
+        {{ $pin->user->name ?? 'N/A' }}
+    </div>
     @if(session('success'))
         <div class="mb-4 text-green-600">{{ session('success') }}</div>
     @endif
@@ -66,6 +70,9 @@
                     <div class="flex items-center justify-between mb-2">
                         <span class="font-semibold">Status: {{ $update->status }}</span>
                         <span class="text-sm text-gray-500">{{ $update->created_at->format('Y-m-d H:i') }}</span>
+                    </div>
+                    <div class="mb-2 text-gray-700 text-sm">
+                        <span class="font-semibold">By:</span> {{ $update->user->name ?? 'N/A' }}
                     </div>
                     @if($update->photo)
                         <img src="{{ asset('storage/' . $update->photo) }}" alt="Update Photo" class="rounded shadow max-h-40 mb-2">
