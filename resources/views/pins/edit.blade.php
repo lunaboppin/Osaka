@@ -37,6 +37,46 @@
         @method('DELETE')
         <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Delete</button>
     </form>
+    <hr class="my-8">
+    <h3 class="text-xl font-semibold mb-4">Add Update</h3>
+    <form method="POST" action="{{ route('pins.updates.store', $pin) }}" enctype="multipart/form-data" class="mb-6">
+        @csrf
+        <div class="mb-4">
+            <label class="block text-gray-700">Status</label>
+            <select name="status" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
+                <option value="New">New</option>
+                <option value="Worn">Worn</option>
+                <option value="Needs replaced">Needs replaced</option>
+            </select>
+            @error('status')<div class="text-red-600 text-sm">{{ $message }}</div>@enderror
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700">Image (optional)</label>
+            <input type="file" name="photo" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+            @error('photo')<div class="text-red-600 text-sm">{{ $message }}</div>@enderror
+        </div>
+        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Add Update</button>
+    </form>
+
+    <h3 class="text-xl font-semibold mb-4">Updates</h3>
+    @if($pin->updates && $pin->updates->count())
+        <ul class="space-y-4">
+            @foreach($pin->updates->sortByDesc('created_at') as $update)
+                <li class="border rounded p-4 bg-gray-50">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-semibold">Status: {{ $update->status }}</span>
+                        <span class="text-sm text-gray-500">{{ $update->created_at->format('Y-m-d H:i') }}</span>
+                    </div>
+                    @if($update->photo)
+                        <img src="{{ asset('storage/' . $update->photo) }}" alt="Update Photo" class="rounded shadow max-h-40 mb-2">
+                    @endif
+                </li>
+            @endforeach
+        </ul>
+    @else
+        <div class="text-gray-500">No updates yet.</div>
+    @endif
+
     <a href="{{ route('pins.index') }}" class="text-blue-600 hover:underline">Back to Pins</a>
 </div>
 @endsection
