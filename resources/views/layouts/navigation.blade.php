@@ -18,6 +18,9 @@
                     <x-nav-link :href="route('pins.create')" :active="request()->routeIs('pins.create')">
                         {{ __('Add Pin') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('pins.index')" :active="request()->routeIs('pins.index')">
+                        {{ __('View Pins') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -75,6 +78,9 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('pins.create')" :active="request()->routeIs('pins.create')">
                 {{ __('Add Pin') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('pins.index')" :active="request()->routeIs('pins.index')">
+                {{ __('View Pins') }}
             </x-responsive-nav-link>
         </div>
 

@@ -9,7 +9,28 @@ class PinController extends Controller
 {
     public function index()
     {
-        return response()->json(Pin::with('user:id,name')->get());
+        $pins = Pin::with('user:id,name')->get();
+        return view('pins.index', compact('pins'));
+    }
+    public function edit(Pin $pin)
+    {
+        return view('pins.edit', compact('pin'));
+    }
+
+    public function update(Request $request, Pin $pin)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'status' => 'required|in:New,Worn,Needs replaced',
+        ]);
+        $pin->update($validated);
+        return redirect()->route('pins.index')->with('success', 'Pin updated!');
+    }
+
+    public function destroy(Pin $pin)
+    {
+        $pin->delete();
+        return redirect()->route('pins.index')->with('success', 'Pin deleted!');
     }
 
     public function create()
