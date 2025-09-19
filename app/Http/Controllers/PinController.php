@@ -20,8 +20,7 @@ class PinController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'status' => 'required|in:New,Worn,Needs replaced',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
             'photo' => 'nullable|image|max:4096',
@@ -33,6 +32,8 @@ class PinController extends Controller
         }
 
         $validated['user_id'] = $request->user()->id;
+        // Set title to empty string for now (should be set by geocoding in future)
+        $validated['title'] = '';
 
         Pin::create($validated);
         return redirect()->route('dashboard')->with('success', 'Pin added!');
