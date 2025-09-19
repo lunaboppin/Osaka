@@ -9,7 +9,9 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    {{ __("You're logged in!") }}
+                    @auth
+                        {{ __("You're logged in!") }}
+                    @endauth
                     <!-- Google Maps Container -->
                     <div id="map" style="height: 500px; width: 100%; margin-top: 2rem;"></div>
                     <div id="pin-info" style="display:none; margin-top:1rem; padding:1rem; border:1px solid #e5e7eb; border-radius:0.5rem; background:#f9fafb;"></div>
