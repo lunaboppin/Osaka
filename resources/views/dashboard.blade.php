@@ -21,6 +21,8 @@
     </div>
     <script src="https://maps.googleapis.com/maps/api/js?key={{ $googleMapsApiKey }}"></script>
     <script>
+        // Expose auth state to JS
+        window.LaravelIsAuthenticated = {{ auth()->check() ? 'true' : 'false' }};
         let map;
         function initMap() {
             map = new google.maps.Map(document.getElementById('map'), {
@@ -83,6 +85,10 @@
                 let status = update ? update.status : '';
                 let date = update ? update.created_at : '';
                 let isOriginal = idx === updates.length - 1;
+                let editBtnHtml = '';
+                if (window.LaravelIsAuthenticated) {
+                    editBtnHtml = `<a href='/pins/${pin.id}/edit' class='inline-block mt-2 ml-2 px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700'>Edit Pin</a>`;
+                }
                 infoBox.innerHTML = `
                     ${photoHtml}
                     ${userHtml}
@@ -91,6 +97,7 @@
                     <div style='font-size:0.9rem; color:#9ca3af;'>Lat: ${pin.latitude}, Lng: ${pin.longitude}</div>
                     <div style='font-size:0.9rem; color:#6b7280; margin-top:0.5rem;'>${isOriginal ? 'Added' : 'Update'}: <strong>${date ? new Date(date).toLocaleString() : ''}</strong></div>
                     ${updates.length > 1 ? `<button id='cycle-update-btn' class='mt-2 px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700'>Show ${isOriginal ? 'Latest' : 'Previous'}</button>` : ''}
+                    ${editBtnHtml}
                 `;
                 if (updates.length > 1) {
                     document.getElementById('cycle-update-btn').onclick = function() {
