@@ -62,29 +62,35 @@
             infoBox.style.display = 'block';
             // Parse updates, sort by date desc
             let updates = Array.isArray(pin.updates) ? pin.updates.slice().sort((a, b) => new Date(b.created_at) - new Date(a.created_at)) : [];
+            // Add the parent pin as the last item (oldest)
+            updates.push({
+                status: pin.status,
+                created_at: pin.created_at,
+                photo: pin.photo,
+                user: pin.user
+            });
             let currentIdx = 0;
             function renderUpdate(idx) {
                 let update = updates[idx];
                 let photoHtml = '';
                 if (update && update.photo) {
                     photoHtml = `<img src='/storage/${update.photo}' alt='Update Photo' style='max-width:100%;max-height:200px;margin-bottom:1rem;border-radius:0.5rem;'>`;
-                } else if (pin.photo) {
-                    photoHtml = `<img src='/storage/${pin.photo}' alt='Pin Photo' style='max-width:100%;max-height:200px;margin-bottom:1rem;border-radius:0.5rem;'>`;
                 }
                 let userHtml = '';
-                if (pin.user && pin.user.name) {
-                    userHtml = `<div style='font-size:0.95rem; color:#374151; margin-bottom:0.5rem;'>Added by: <strong>${pin.user.name}</strong></div>`;
+                if (update && update.user && update.user.name) {
+                    userHtml = `<div style='font-size:0.95rem; color:#374151; margin-bottom:0.5rem;'>By: <strong>${update.user.name}</strong></div>`;
                 }
-                let status = update ? update.status : pin.status;
-                let date = update ? update.created_at : pin.created_at;
+                let status = update ? update.status : '';
+                let date = update ? update.created_at : '';
+                let isOriginal = idx === updates.length - 1;
                 infoBox.innerHTML = `
                     ${photoHtml}
                     ${userHtml}
                     <h3 style='font-size:1.25rem; font-weight:600; color:#374151;'>${pin.title || ''}</h3>
                     <p style='color:#6b7280;'>Status: <strong>${status || ''}</strong></p>
                     <div style='font-size:0.9rem; color:#9ca3af;'>Lat: ${pin.latitude}, Lng: ${pin.longitude}</div>
-                    <div style='font-size:0.9rem; color:#6b7280; margin-top:0.5rem;'>${update ? 'Update' : 'Added'}: <strong>${date ? new Date(date).toLocaleString() : ''}</strong></div>
-                    ${updates.length > 1 ? `<button id='cycle-update-btn' class='mt-2 px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700'>${idx === 0 ? 'Show Previous' : 'Show Next'}</button>` : ''}
+                    <div style='font-size:0.9rem; color:#6b7280; margin-top:0.5rem;'>${isOriginal ? 'Added' : 'Update'}: <strong>${date ? new Date(date).toLocaleString() : ''}</strong></div>
+                    ${updates.length > 1 ? `<button id='cycle-update-btn' class='mt-2 px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700'>Show ${isOriginal ? 'Latest' : 'Previous'}</button>` : ''}
                 `;
                 if (updates.length > 1) {
                     document.getElementById('cycle-update-btn').onclick = function() {
