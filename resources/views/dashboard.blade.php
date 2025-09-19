@@ -16,5 +16,5 @@
         </div>
     </div>
     <script src="https://maps.googleapis.com/maps/api/js?key={{ $googleMapsApiKey }}&callback=initMap" async defer></script>
-    @vite('resources/js/map.js')
+    @vite('resources/js/app.js')
 </x-app-layout>
