@@ -21,7 +21,10 @@ class PinUpdateController extends Controller
         }
         $validated['pin_id'] = $pin->id;
         $validated['user_id'] = $request->user()->id;
-        PinUpdate::create($validated);
-        return redirect()->route('pins.edit', $pin)->with('success', 'Update added!');
+    $update = PinUpdate::create($validated);
+    // Update parent pin's status
+    $pin->status = $update->status;
+    $pin->save();
+    return redirect()->route('pins.edit', $pin)->with('success', 'Update added!');
     }
 }
