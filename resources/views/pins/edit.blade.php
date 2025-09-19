@@ -2,6 +2,11 @@
 
 @section('content')
 <div class="max-w-md mx-auto py-10 sm:px-6 lg:px-8">
+    @if($pin->photo)
+        <div class="mb-6 flex justify-center">
+            <img src="{{ asset('storage/' . $pin->photo) }}" alt="Pin Photo" class="rounded shadow max-h-60 max-w-full">
+        </div>
+    @endif
     <h2 class="text-2xl font-bold mb-6">Edit Pin</h2>
     @if(session('success'))
         <div class="mb-4 text-green-600">{{ session('success') }}</div>
