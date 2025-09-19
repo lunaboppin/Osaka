@@ -11,7 +11,7 @@ class PinUpdateController extends Controller
     public function store(Request $request, Pin $pin)
     {
         $validated = $request->validate([
-            'status' => 'required|in:New,Worn,Needs replaced',
+            'status' => 'required|in:New,Worn,Needs replaced,Missing',
             'photo' => 'nullable|image|max:4096',
         ]);
 

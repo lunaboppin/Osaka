@@ -40,6 +40,7 @@
                         let color = 'green';
                         if (latestStatus === 'Worn') color = 'orange';
                         else if (latestStatus === 'Needs replaced') color = 'red';
+                        else if (latestStatus === 'Missing') color = 'black';
                         const icon = {
                             path: google.maps.SymbolPath.CIRCLE,
                             scale: 8,

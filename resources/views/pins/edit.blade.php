@@ -29,6 +29,7 @@
                 <option value="New" @if($pin->status=='New') selected @endif>New</option>
                 <option value="Worn" @if($pin->status=='Worn') selected @endif>Worn</option>
                 <option value="Needs replaced" @if($pin->status=='Needs replaced') selected @endif>Needs replaced</option>
+                <option value="Missing" @if($pin->status=='Missing') selected @endif>Missing</option>
             </select>
             @error('status')<div class="text-red-600 text-sm">{{ $message }}</div>@enderror
         </div>
@@ -51,6 +52,7 @@
                 <option value="New">New</option>
                 <option value="Worn">Worn</option>
                 <option value="Needs replaced">Needs replaced</option>
+                <option value="Missing">Missing</option>
             </select>
             @error('status')<div class="text-red-600 text-sm">{{ $message }}</div>@enderror
         </div>

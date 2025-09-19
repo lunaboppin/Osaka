@@ -31,7 +31,7 @@ class PinController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'status' => 'required|in:New,Worn,Needs replaced',
+            'status' => 'required|in:New,Worn,Needs replaced,Missing',
         ]);
         $pin->update($validated);
         return redirect()->route('pins.index')->with('success', 'Pin updated!');
@@ -52,7 +52,7 @@ class PinController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'status' => 'required|in:New,Worn,Needs replaced',
+            'status' => 'required|in:New,Worn,Needs replaced,Missing',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
             'photo' => 'nullable|image|max:4096',
