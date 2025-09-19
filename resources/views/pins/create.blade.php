@@ -24,8 +24,12 @@
                     <input type="text" name="title" id="title" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 transition" required>
                 </div>
                 <div>
-                    <label class="block text-gray-800 font-semibold mb-1" for="description">Description</label>
-                    <textarea name="description" id="description" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 transition" rows="3"></textarea>
+                    <label class="block text-gray-800 font-semibold mb-1" for="status">Status</label>
+                    <select name="status" id="status" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 transition" required>
+                        <option value="New">New</option>
+                        <option value="Worn">Worn</option>
+                        <option value="Needs replaced">Needs replaced</option>
+                    </select>
                 </div>
                 <div>
                     <label class="block text-gray-800 font-semibold mb-1" for="photo">Photo</label>

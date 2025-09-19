@@ -50,7 +50,7 @@
                                 ${photoHtml}
                                 ${userHtml}
                                 <h3 style='font-size:1.25rem; font-weight:600; color:#374151;'>${pin.title || ''}</h3>
-                                <p style='color:#6b7280;'>${pin.description || ''}</p>
+                                <p style='color:#6b7280;'>Status: <strong>${pin.status || ''}</strong></p>
                                 <div style='font-size:0.9rem; color:#9ca3af;'>Lat: ${pin.latitude}, Lng: ${pin.longitude}</div>
                             `;
                         });

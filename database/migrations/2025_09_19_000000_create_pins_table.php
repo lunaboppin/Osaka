@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('title')->nullable();
             $table->decimal('latitude', 10, 7);
             $table->decimal('longitude', 10, 7);
-            $table->text('description')->nullable();
+            $table->enum('status', ['New', 'Worn', 'Needs replaced'])->default('New');
             $table->timestamps();
         });
     }

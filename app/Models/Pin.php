@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Pin extends Model
 {
     protected $fillable = [
-        'title', 'latitude', 'longitude', 'description', 'photo', 'user_id'
+        'title', 'latitude', 'longitude', 'status', 'photo', 'user_id'
     ];
 
     public function user()

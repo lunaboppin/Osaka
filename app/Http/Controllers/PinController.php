@@ -21,7 +21,7 @@ class PinController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'status' => 'required|in:New,Worn,Needs replaced',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
             'photo' => 'nullable|image|max:4096',
