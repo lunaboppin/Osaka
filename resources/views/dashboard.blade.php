@@ -20,9 +20,8 @@
         </div>
     </div>
     <script src="https://maps.googleapis.com/maps/api/js?key={{ $googleMapsApiKey }}"></script>
+    <script>window.LaravelIsAuthenticated = {{ auth()->check() ? 'true' : 'false' }};</script>
     <script>
-        // Expose auth state to JS
-        window.LaravelIsAuthenticated = {{ auth()->check() ? 'true' : 'false' }};
         let map;
         function initMap() {
             map = new google.maps.Map(document.getElementById('map'), {
@@ -34,10 +33,13 @@
                 .then(response => response.json())
                 .then(pins => {
                     pins.forEach(pin => {
-                        // Choose marker color based on status
+                        // Use latest update's status for marker color if available
+                        let latestStatus = pin.updates && pin.updates.length > 0
+                            ? pin.updates.slice().sort((a, b) => new Date(b.created_at) - new Date(a.created_at))[0].status
+                            : pin.status;
                         let color = 'green';
-                        if (pin.status === 'Worn') color = 'orange';
-                        else if (pin.status === 'Needs replaced') color = 'red';
+                        if (latestStatus === 'Worn') color = 'orange';
+                        else if (latestStatus === 'Needs replaced') color = 'red';
                         const icon = {
                             path: google.maps.SymbolPath.CIRCLE,
                             scale: 8,
