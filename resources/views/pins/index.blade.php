@@ -10,21 +10,21 @@
         <table class="min-w-full bg-white border border-gray-200">
             <thead>
                 <tr>
-                    <th class="px-4 py-2 border-b">ID</th>
-                    <th class="px-4 py-2 border-b">Title</th>
-                    <th class="px-4 py-2 border-b">Status</th>
-                    <th class="px-4 py-2 border-b">User</th>
-                    <th class="px-4 py-2 border-b">Actions</th>
+                    <th class="px-4 py-2 border-b text-center">ID</th>
+                    <th class="px-4 py-2 border-b text-center">Title</th>
+                    <th class="px-4 py-2 border-b text-center">Status</th>
+                    <th class="px-4 py-2 border-b text-center">User</th>
+                    <th class="px-4 py-2 border-b text-center">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($pins as $pin)
                 <tr>
-                    <td class="px-4 py-2 border-b">{{ $pin->id }}</td>
-                    <td class="px-4 py-2 border-b">{{ $pin->title }}</td>
-                    <td class="px-4 py-2 border-b">{{ $pin->status }}</td>
-                    <td class="px-4 py-2 border-b">{{ $pin->user->name ?? 'N/A' }}</td>
-                    <td class="px-4 py-2 border-b">
+                    <td class="px-4 py-2 border-b text-center">{{ $pin->id }}</td>
+                    <td class="px-4 py-2 border-b text-center">{{ $pin->title }}</td>
+                    <td class="px-4 py-2 border-b text-center">{{ $pin->status }}</td>
+                    <td class="px-4 py-2 border-b text-center">{{ $pin->user->name ?? 'N/A' }}</td>
+                    <td class="px-4 py-2 border-b text-center">
                         <a href="{{ route('pins.edit', $pin) }}" class="text-blue-600 hover:underline">Edit</a>
                     </td>
                 </tr>
