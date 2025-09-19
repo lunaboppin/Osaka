@@ -30,10 +30,23 @@
                 .then(response => response.json())
                 .then(pins => {
                     pins.forEach(pin => {
+                        // Choose marker color based on status
+                        let color = 'green';
+                        if (pin.status === 'Worn') color = 'orange';
+                        else if (pin.status === 'Needs replaced') color = 'red';
+                        const icon = {
+                            path: google.maps.SymbolPath.CIRCLE,
+                            scale: 8,
+                            fillColor: color,
+                            fillOpacity: 1,
+                            strokeWeight: 1,
+                            strokeColor: '#333'
+                        };
                         const marker = new google.maps.Marker({
                             position: { lat: parseFloat(pin.latitude), lng: parseFloat(pin.longitude) },
                             map: map,
-                            title: pin.title || ''
+                            title: pin.title || '',
+                            icon: icon
                         });
                         marker.addListener('click', function() {
                             const infoBox = document.getElementById('pin-info');
