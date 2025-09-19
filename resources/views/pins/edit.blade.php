@@ -25,12 +25,12 @@
         </div>
         <div class="flex items-center justify-between">
             <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Update</button>
-            <form method="POST" action="{{ route('pins.destroy', $pin) }}" onsubmit="return confirm('Delete this pin?');">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Delete</button>
-            </form>
         </div>
+    </form>
+    <form method="POST" action="{{ route('pins.destroy', $pin) }}" onsubmit="return confirm('Delete this pin?');" class="mb-4">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Delete</button>
     </form>
     <a href="{{ route('pins.index') }}" class="text-blue-600 hover:underline">Back to Pins</a>
 </div>
