@@ -14,6 +14,7 @@
                     <th class="px-4 py-2 border-b text-center">Title</th>
                     <th class="px-4 py-2 border-b text-center">Status</th>
                     <th class="px-4 py-2 border-b text-center">User</th>
+                    <th class="px-4 py-2 border-b text-center">Date Added</th>
                     <th class="px-4 py-2 border-b text-center">Actions</th>
                 </tr>
             </thead>
@@ -24,6 +25,7 @@
                     <td class="px-4 py-2 border-b text-center">{{ $pin->title }}</td>
                     <td class="px-4 py-2 border-b text-center">{{ $pin->status }}</td>
                     <td class="px-4 py-2 border-b text-center">{{ $pin->user->name ?? 'N/A' }}</td>
+                    <td class="px-4 py-2 border-b text-center">{{ $pin->created_at ? $pin->created_at->format('Y-m-d H:i') : '' }}</td>
                     <td class="px-4 py-2 border-b text-center">
                         <a href="{{ route('pins.edit', $pin) }}" class="text-blue-600 hover:underline">Edit</a>
                     </td>
