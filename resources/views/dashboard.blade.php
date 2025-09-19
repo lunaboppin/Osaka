@@ -17,8 +17,7 @@
             </div>
         </div>
     </div>
-    <!-- Google Maps JS API (replace YOUR_API_KEY with your actual key) -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDL-vgKiWDteWO3xPQj7EHUHN17rmTMVO0"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ $googleMapsApiKey }}"></script>
     <script>
         let map;
         function initMap() {
