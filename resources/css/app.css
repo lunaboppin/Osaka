@@ -48,15 +48,15 @@
     }
 
     .badge-new {
-        @apply badge bg-emerald-100 text-emerald-800;
+        @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800;
     }
 
     .badge-worn {
-        @apply badge bg-amber-100 text-amber-800;
+        @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800;
     }
 
     .badge-needs-replaced {
-        @apply badge bg-red-100 text-red-800;
+        @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800;
     }
 }
 
