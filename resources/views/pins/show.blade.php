@@ -57,7 +57,7 @@
                             @endif
                             <div class="flex items-center">
                                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                                {{ $pin->created_at?->format('M j, Y \a\t g:ia') }}
+                                {{ $pin->created_at?->format('j M Y \a\t H:i') }}
                             </div>
                         </div>
                     </div>
@@ -106,7 +106,7 @@
                     <div class="bg-osaka-cream rounded-lg p-4">
                         <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Last Checked</div>
                         @if($pin->last_checked_at)
-                            <div class="text-sm text-osaka-charcoal">{{ $pin->last_checked_at->format('M j, Y') }}</div>
+                            <div class="text-sm text-osaka-charcoal">{{ $pin->last_checked_at->format('j M Y') }}</div>
                             <div class="text-xs {{ $pin->urgency === 'overdue' ? 'text-red-600 font-semibold' : ($pin->urgency === 'warning' ? 'text-amber-500' : 'text-gray-400') }}">
                                 {{ $pin->days_since_checked }} days ago
                             </div>
@@ -275,7 +275,7 @@
                                                 @endif
                                             </div>
                                             <div class="flex items-center gap-3 text-xs text-gray-400">
-                                                <span>{{ $update->created_at->format('M j, Y \a\t g:ia') }}</span>
+                                                <span>{{ $update->created_at->format('j M Y \a\t H:i') }}</span>
                                                 <span>{{ $update->created_at->diffForHumans() }}</span>
                                             </div>
                                         </div>

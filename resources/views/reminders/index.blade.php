@@ -187,7 +187,7 @@
 
                                             {{-- Last checked --}}
                                             <span class="text-gray-400 hidden sm:inline">
-                                                {{ $pin->last_checked_at ? 'Checked ' . $pin->last_checked_at->format('M j, Y') : 'Never checked' }}
+                                                {{ $pin->last_checked_at ? 'Checked ' . $pin->last_checked_at->format('j M Y') : 'Never checked' }}
                                             </span>
 
                                             {{-- User --}}

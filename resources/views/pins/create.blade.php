@@ -42,7 +42,9 @@
                     {{-- Title --}}
                     <div>
                         <label class="form-label" for="title">Title <span class="text-osaka-red">*</span></label>
-                        <input type="text" name="title" id="title" class="form-input-osaka" placeholder="e.g. Sticker on Cathedral Quarter lamppost" required>
+                        <input type="text" name="title" id="title" class="form-input-osaka" placeholder="e.g. Sticker on Cathedral Quarter lamppost" required
+                               @keydown="$el.dataset.autofilled = 'false'">
+                        <p class="text-xs text-gray-400 mt-1">Auto-filled from location — edit freely</p>
                     </div>
 
                     {{-- Description --}}
@@ -160,6 +162,7 @@
             photoPreview: null,
             previewMap: null,
             previewMarker: null,
+            geocoder: null,
 
             previewPhoto(event) {
                 const file = event.target.files[0];
@@ -175,6 +178,54 @@
                 document.getElementById('photo').value = '';
             },
 
+            reverseGeocode(lat, lng) {
+                if (typeof google === 'undefined') return;
+                if (!this.geocoder) this.geocoder = new google.maps.Geocoder();
+
+                this.geocoder.geocode({ location: { lat, lng } }, (results, status) => {
+                    if (status !== 'OK' || !results || !results.length) return;
+
+                    const titleInput = document.getElementById('title');
+                    // Only autofill if the title is empty or was previously autofilled
+                    if (titleInput && (!titleInput.value || titleInput.dataset.autofilled === 'true')) {
+                        // Try to find a street-level result
+                        let streetName = '';
+
+                        // Look through address components for the best street name
+                        for (const result of results) {
+                            const types = result.types || [];
+                            // Prefer route (street), then street_address, then premise
+                            if (types.includes('route') || types.includes('street_address')) {
+                                // Extract route and street_number components
+                                const route = result.address_components.find(c => c.types.includes('route'));
+                                const number = result.address_components.find(c => c.types.includes('street_number'));
+                                if (route) {
+                                    streetName = number ? `${number.long_name} ${route.long_name}` : route.long_name;
+                                    break;
+                                }
+                            }
+                        }
+
+                        // Fallback: get route from the first result's address components
+                        if (!streetName && results[0]) {
+                            const route = results[0].address_components.find(c => c.types.includes('route'));
+                            if (route) streetName = route.long_name;
+                        }
+
+                        // Fallback: use formatted address minus country/postcode for a short name
+                        if (!streetName && results[0]) {
+                            streetName = results[0].formatted_address.split(',').slice(0, 2).join(',').trim();
+                        }
+
+                        if (streetName) {
+                            titleInput.value = streetName;
+                            titleInput.dataset.autofilled = 'true';
+                            titleInput.dispatchEvent(new Event('input'));
+                        }
+                    }
+                });
+            },
+
             getLocation() {
                 this.gettingLocation = true;
                 this.locationStatus = 'Getting location...';
@@ -185,6 +236,7 @@
                         this.locationStatus = `Location set: ${pos.coords.latitude.toFixed(5)}, ${pos.coords.longitude.toFixed(5)}`;
                         this.gettingLocation = false;
                         this.$nextTick(() => this.showLocationMap());
+                        this.reverseGeocode(pos.coords.latitude, pos.coords.longitude);
                     }, (err) => {
                         this.locationStatus = 'Unable to retrieve your location. Please allow location access.';
                         this.gettingLocation = false;
@@ -241,6 +293,7 @@
                     this.latitude = event.latLng.lat();
                     this.longitude = event.latLng.lng();
                     this.locationStatus = `Location set: ${event.latLng.lat().toFixed(5)}, ${event.latLng.lng().toFixed(5)}`;
+                    this.reverseGeocode(event.latLng.lat(), event.latLng.lng());
                 });
             },
 
@@ -269,6 +322,8 @@
                         this.locationStatus = '';
                         this.photoPreview = null;
                         this.status = 'New';
+                        const titleEl = document.getElementById('title');
+                        if (titleEl) titleEl.dataset.autofilled = 'false';
                     } else {
                         const data = await response.json().catch(() => ({}));
                         let msg = data.message || 'Failed to add pin.';
