@@ -14,6 +14,10 @@ class PinUpdateController extends Controller
      */
     public function store(Request $request, Pin $pin)
     {
+        if (!$request->user()->hasPermission('updates.create')) {
+            abort(403, 'You do not have permission to post timeline updates.');
+        }
+
         $validated = $request->validate([
             'status' => 'required|in:New,Worn,Needs replaced',
             'notes' => 'nullable|string|max:2000',
@@ -48,9 +52,14 @@ class PinUpdateController extends Controller
      */
     public function destroy(Pin $pin, PinUpdate $update)
     {
-        // Only the update's author or the pin owner can delete an update
-        if ($update->user_id !== auth()->id() && $pin->user_id !== auth()->id()) {
-            abort(403, 'You can only delete your own updates.');
+        $user = auth()->user();
+        $isOwn = $update->user_id === $user->id;
+
+        if ($isOwn && !$user->hasPermission('updates.delete_own')) {
+            abort(403, 'You do not have permission to delete timeline updates.');
+        }
+        if (!$isOwn && !$user->hasPermission('updates.delete_any')) {
+            abort(403, 'You do not have permission to delete other users\' updates.');
         }
 
         // Clean up stored photo

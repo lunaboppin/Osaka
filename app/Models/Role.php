@@ -30,6 +30,7 @@ class Role extends Model
             'updates.create' => 'Post timeline updates',
             'updates.delete_own' => 'Delete own timeline updates',
             'updates.delete_any' => 'Delete any timeline update',
+            'sticker_types.manage' => 'Manage sticker types',
             'users.view_profiles' => 'View user profiles',
             'roles.manage' => 'Manage roles',
             'users.manage' => 'Manage users & assign roles',

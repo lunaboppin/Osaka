@@ -25,8 +25,12 @@ class AuthController extends Controller
             ], [
                 'name' => $authentikUser->getName(),
                 'authentik_id' => $authentikUser->getId(),
-                'avatar' => $authentikUser->getAvatar(),
             ]);
+
+            // Only set avatar from Authentik if the user hasn't uploaded a local one
+            if (!$user->avatar && $authentikUser->getAvatar()) {
+                $user->update(['avatar' => $authentikUser->getAvatar()]);
+            }
 
             Auth::login($user, true);
 

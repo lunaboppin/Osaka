@@ -29,7 +29,9 @@ class RoleSeeder extends Seeder
                 'updates.create',
                 'updates.delete_own',
                 'updates.delete_any',
+                'sticker_types.manage',
                 'users.view_profiles',
+                'admin.access',
             ],
         ]);
 

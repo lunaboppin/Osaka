@@ -64,20 +64,28 @@
 
                     {{-- Actions --}}
                     @auth
-                        @if($pin->user_id === auth()->id())
+                        @php
+                            $canEdit = ($pin->user_id === auth()->id() && auth()->user()->hasPermission('pins.edit_own')) || auth()->user()->hasPermission('pins.edit_any');
+                            $canDelete = ($pin->user_id === auth()->id() && auth()->user()->hasPermission('pins.delete_own')) || auth()->user()->hasPermission('pins.delete_any');
+                        @endphp
+                        @if($canEdit || $canDelete)
                             <div class="flex items-center space-x-2 shrink-0">
-                                <a href="{{ route('pins.edit', $pin) }}" class="btn-secondary btn-sm">
-                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                                    Edit
-                                </a>
-                                <form method="POST" action="{{ route('pins.destroy', $pin) }}" onsubmit="return confirm('Are you sure you want to delete this pin?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn-danger btn-sm">
-                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                                        Delete
-                                    </button>
-                                </form>
+                                @if($canEdit)
+                                    <a href="{{ route('pins.edit', $pin) }}" class="btn-secondary btn-sm">
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                        Edit
+                                    </a>
+                                @endif
+                                @if($canDelete)
+                                    <form method="POST" action="{{ route('pins.destroy', $pin) }}" onsubmit="return confirm('Are you sure you want to delete this pin?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn-danger btn-sm">
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                            Delete
+                                        </button>
+                                    </form>
+                                @endif
                             </div>
                         @endif
                     @endauth
@@ -144,6 +152,7 @@
 
             {{-- Add Update Form --}}
             @auth
+                @if(auth()->user()->hasPermission('updates.create'))
                 <div class="card mb-6" x-data="{ open: false, photoPreview: null }">
                     <div class="card-body">
                         <button @click="open = !open" class="w-full flex items-center justify-between text-left">
@@ -220,10 +229,10 @@
                         </form>
                     </div>
                 </div>
+                @endif
             @endauth
 
-            {{-- Timeline Entries --}}
-            @if($pin->updates->count() > 0)
+            {{-- Timeline Entries --}}            @if($pin->updates->count() > 0)
                 <div class="relative">
                     {{-- Timeline line --}}
                     <div class="absolute left-[19px] top-0 bottom-0 w-0.5 bg-gray-200"></div>
@@ -304,7 +313,7 @@
 
                                             {{-- Delete button for update owner / pin owner --}}
                                             @auth
-                                                @if($update->user_id === auth()->id() || $pin->user_id === auth()->id())
+                                                @if(($update->user_id === auth()->id() && auth()->user()->hasPermission('updates.delete_own')) || auth()->user()->hasPermission('updates.delete_any'))
                                                     @if($pin->updates->count() > 1)
                                                         <form method="POST" action="{{ route('pins.updates.destroy', [$pin, $update]) }}"
                                                               onsubmit="return confirm('Remove this timeline entry?');">

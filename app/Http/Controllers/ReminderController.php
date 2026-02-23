@@ -61,6 +61,10 @@ class ReminderController extends Controller
      */
     public function check(Request $request, Pin $pin)
     {
+        if (!$request->user()->hasPermission('pins.check')) {
+            abort(403, 'You do not have permission to check pins.');
+        }
+
         $pin->update(['last_checked_at' => now()]);
 
         // Record a timeline entry for the check
@@ -87,6 +91,10 @@ class ReminderController extends Controller
      */
     public function bulkCheck(Request $request)
     {
+        if (!$request->user()->hasPermission('pins.check')) {
+            abort(403, 'You do not have permission to check pins.');
+        }
+
         $validated = $request->validate([
             'pin_ids' => 'required|array',
             'pin_ids.*' => 'exists:pins,id',

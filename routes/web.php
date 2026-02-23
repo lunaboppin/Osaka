@@ -58,23 +58,29 @@ Route::middleware('auth')->group(function () {
 
     // Admin routes (permission-gated)
     Route::prefix('admin')->middleware('permission:admin.access')->group(function () {
-        Route::get('/roles', [RoleController::class, 'index'])->name('admin.roles.index');
-        Route::get('/roles/create', [RoleController::class, 'create'])->name('admin.roles.create');
-        Route::post('/roles', [RoleController::class, 'store'])->name('admin.roles.store');
-        Route::get('/roles/{role}/edit', [RoleController::class, 'edit'])->name('admin.roles.edit');
-        Route::put('/roles/{role}', [RoleController::class, 'update'])->name('admin.roles.update');
-        Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('admin.roles.destroy');
+        Route::middleware('permission:roles.manage')->group(function () {
+            Route::get('/roles', [RoleController::class, 'index'])->name('admin.roles.index');
+            Route::get('/roles/create', [RoleController::class, 'create'])->name('admin.roles.create');
+            Route::post('/roles', [RoleController::class, 'store'])->name('admin.roles.store');
+            Route::get('/roles/{role}/edit', [RoleController::class, 'edit'])->name('admin.roles.edit');
+            Route::put('/roles/{role}', [RoleController::class, 'update'])->name('admin.roles.update');
+            Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('admin.roles.destroy');
+        });
 
-        Route::get('/users', [AdminUserController::class, 'index'])->name('admin.users.index');
-        Route::get('/users/{user}/edit', [AdminUserController::class, 'edit'])->name('admin.users.edit');
-        Route::put('/users/{user}', [AdminUserController::class, 'update'])->name('admin.users.update');
+        Route::middleware('permission:users.manage')->group(function () {
+            Route::get('/users', [AdminUserController::class, 'index'])->name('admin.users.index');
+            Route::get('/users/{user}/edit', [AdminUserController::class, 'edit'])->name('admin.users.edit');
+            Route::put('/users/{user}', [AdminUserController::class, 'update'])->name('admin.users.update');
+        });
 
-        Route::get('/sticker-types', [StickerTypeController::class, 'index'])->name('admin.sticker-types.index');
-        Route::get('/sticker-types/create', [StickerTypeController::class, 'create'])->name('admin.sticker-types.create');
-        Route::post('/sticker-types', [StickerTypeController::class, 'store'])->name('admin.sticker-types.store');
-        Route::get('/sticker-types/{stickerType}/edit', [StickerTypeController::class, 'edit'])->name('admin.sticker-types.edit');
-        Route::put('/sticker-types/{stickerType}', [StickerTypeController::class, 'update'])->name('admin.sticker-types.update');
-        Route::delete('/sticker-types/{stickerType}', [StickerTypeController::class, 'destroy'])->name('admin.sticker-types.destroy');
+        Route::middleware('permission:sticker_types.manage')->group(function () {
+            Route::get('/sticker-types', [StickerTypeController::class, 'index'])->name('admin.sticker-types.index');
+            Route::get('/sticker-types/create', [StickerTypeController::class, 'create'])->name('admin.sticker-types.create');
+            Route::post('/sticker-types', [StickerTypeController::class, 'store'])->name('admin.sticker-types.store');
+            Route::get('/sticker-types/{stickerType}/edit', [StickerTypeController::class, 'edit'])->name('admin.sticker-types.edit');
+            Route::put('/sticker-types/{stickerType}', [StickerTypeController::class, 'update'])->name('admin.sticker-types.update');
+            Route::delete('/sticker-types/{stickerType}', [StickerTypeController::class, 'destroy'])->name('admin.sticker-types.destroy');
+        });
     });
 });
 

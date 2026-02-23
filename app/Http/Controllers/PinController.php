@@ -67,11 +67,19 @@ class PinController extends Controller
 
     public function create()
     {
+        if (!auth()->user()->hasPermission('pins.create')) {
+            abort(403, 'You do not have permission to create pins.');
+        }
+
         return view('pins.create');
     }
 
     public function store(Request $request)
     {
+        if (!$request->user()->hasPermission('pins.create')) {
+            abort(403, 'You do not have permission to create pins.');
+        }
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string|max:2000',
@@ -116,8 +124,12 @@ class PinController extends Controller
 
     public function edit(Pin $pin)
     {
-        if ($pin->user_id !== auth()->id()) {
-            abort(403, 'You can only edit your own pins.');
+        $user = auth()->user();
+        if ($pin->user_id !== $user->id && !$user->hasPermission('pins.edit_any')) {
+            abort(403, 'You do not have permission to edit this pin.');
+        }
+        if ($pin->user_id === $user->id && !$user->hasPermission('pins.edit_own')) {
+            abort(403, 'You do not have permission to edit pins.');
         }
 
         return view('pins.edit', compact('pin'));
@@ -125,8 +137,12 @@ class PinController extends Controller
 
     public function update(Request $request, Pin $pin)
     {
-        if ($pin->user_id !== auth()->id()) {
-            abort(403, 'You can only edit your own pins.');
+        $user = $request->user();
+        if ($pin->user_id !== $user->id && !$user->hasPermission('pins.edit_any')) {
+            abort(403, 'You do not have permission to edit this pin.');
+        }
+        if ($pin->user_id === $user->id && !$user->hasPermission('pins.edit_own')) {
+            abort(403, 'You do not have permission to edit pins.');
         }
 
         $validated = $request->validate([
@@ -186,8 +202,12 @@ class PinController extends Controller
 
     public function destroy(Pin $pin)
     {
-        if ($pin->user_id !== auth()->id()) {
-            abort(403, 'You can only delete your own pins.');
+        $user = auth()->user();
+        if ($pin->user_id !== $user->id && !$user->hasPermission('pins.delete_any')) {
+            abort(403, 'You do not have permission to delete this pin.');
+        }
+        if ($pin->user_id === $user->id && !$user->hasPermission('pins.delete_own')) {
+            abort(403, 'You do not have permission to delete pins.');
         }
 
         // Delete photo from storage
