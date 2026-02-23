@@ -1,12 +1,31 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
-        <link rel="icon" type="image/png" href="{{ asset('images/osaka.png') }}">
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Osaka Sticker Tracker') }}</title>
+        <title>{{ isset($pageTitle) ? $pageTitle . ' · ' . config('app.name', 'Osaka Sticker Tracker') : config('app.name', 'Osaka Sticker Tracker') }}</title>
+        <meta name="description" content="{{ $metaDescription ?? 'Track and manage sticker placements across the city.' }}">
+        <meta name="theme-color" content="#C41E3A">
+
+        {{-- Open Graph --}}
+        <meta property="og:type" content="website">
+        <meta property="og:site_name" content="{{ config('app.name', 'Osaka Sticker Tracker') }}">
+        <meta property="og:title" content="{{ $metaTitle ?? config('app.name', 'Osaka Sticker Tracker') }}">
+        <meta property="og:description" content="{{ $metaDescription ?? 'Track and manage sticker placements across the city.' }}">
+        <meta property="og:image" content="{{ $metaImage ?? asset('images/osaka.png') }}">
+        <meta property="og:url" content="{{ url()->current() }}">
+
+        {{-- Twitter / Discord --}}
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:title" content="{{ $metaTitle ?? config('app.name', 'Osaka Sticker Tracker') }}">
+        <meta name="twitter:description" content="{{ $metaDescription ?? 'Track and manage sticker placements across the city.' }}">
+        <meta name="twitter:image" content="{{ $metaImage ?? asset('images/osaka.png') }}">
+
+        @stack('meta')
+
+        <link rel="icon" type="image/png" href="{{ asset('images/osaka.png') }}">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
