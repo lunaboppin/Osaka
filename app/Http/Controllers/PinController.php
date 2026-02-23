@@ -58,7 +58,7 @@ class PinController extends Controller
 
     public function show(Pin $pin)
     {
-        $pin->load(['user:id,name,avatar', 'updates.user:id,name,avatar']);
+        $pin->load(['user:id,name,avatar', 'user.roles', 'updates.user:id,name,avatar', 'updates.user.roles']);
         return view('pins.show', compact('pin'));
     }
 

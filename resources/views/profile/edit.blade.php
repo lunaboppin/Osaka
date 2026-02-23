@@ -72,6 +72,12 @@
                                 @error('name') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
                             </div>
                             <div>
+                                <label for="bio" class="form-label">Bio <span class="font-normal text-gray-400">(optional)</span></label>
+                                <textarea name="bio" id="bio" rows="3" class="form-input-osaka" maxlength="500" placeholder="Tell people a bit about yourself...">{{ old('bio', $user->bio) }}</textarea>
+                                <p class="text-xs text-gray-400 mt-1">Up to 500 characters</p>
+                                @error('bio') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+                            </div>
+                            <div>
                                 <label class="form-label text-gray-400">Email</label>
                                 <p class="text-sm text-gray-500">{{ $user->email }}</p>
                                 <p class="text-xs text-gray-400 mt-0.5">Managed by your authentication provider</p>
@@ -79,6 +85,16 @@
                             <p class="text-xs text-gray-400">
                                 Member since {{ $user->created_at?->format('j F Y') }}
                             </p>
+                            {{-- Role badges --}}
+                            @if($user->roles->count() > 0)
+                                <div class="flex flex-wrap gap-1.5">
+                                    @foreach($user->roles->sortByDesc('priority') as $role)
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold text-white" style="background-color: {{ $role->color }}">
+                                            {{ $role->display_name }}
+                                        </span>
+                                    @endforeach
+                                </div>
+                            @endif
                             <div class="pt-2">
                                 <button type="submit" class="btn-primary btn-sm">
                                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PinController;
@@ -15,6 +17,9 @@ Route::get('/', DashboardController::class)->name('dashboard');
 
 // Always accessible: pins JSON endpoint
 Route::get('/pins/json', [PinController::class, 'json'])->name('pins.json');
+
+// Public profile pages
+Route::get('/users/{user}', [ProfileController::class, 'show'])->name('profile.show');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', function () {
@@ -45,6 +50,20 @@ Route::middleware('auth')->group(function () {
     Route::get('/reminders', [ReminderController::class, 'index'])->name('reminders.index');
     Route::post('/pins/{pin}/check', [ReminderController::class, 'check'])->name('pins.check');
     Route::post('/reminders/bulk-check', [ReminderController::class, 'bulkCheck'])->name('reminders.bulk-check');
+
+    // Admin routes (permission-gated)
+    Route::prefix('admin')->middleware('permission:admin.access')->group(function () {
+        Route::get('/roles', [RoleController::class, 'index'])->name('admin.roles.index');
+        Route::get('/roles/create', [RoleController::class, 'create'])->name('admin.roles.create');
+        Route::post('/roles', [RoleController::class, 'store'])->name('admin.roles.store');
+        Route::get('/roles/{role}/edit', [RoleController::class, 'edit'])->name('admin.roles.edit');
+        Route::put('/roles/{role}', [RoleController::class, 'update'])->name('admin.roles.update');
+        Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('admin.roles.destroy');
+
+        Route::get('/users', [AdminUserController::class, 'index'])->name('admin.users.index');
+        Route::get('/users/{user}/edit', [AdminUserController::class, 'edit'])->name('admin.users.edit');
+        Route::put('/users/{user}', [AdminUserController::class, 'update'])->name('admin.users.update');
+    });
 });
 
 // Public pin detail page (after auth routes to avoid conflicts with /pins/create etc.)

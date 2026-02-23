@@ -43,14 +43,16 @@
             {{-- User --}}
             <div class="flex items-center space-x-2">
                 @if($pin->user)
-                    @if($pin->user->avatar)
-                        <img src="{{ $pin->user->avatar }}" alt="{{ $pin->user->name }}" class="w-6 h-6 rounded-full">
-                    @else
-                        <div class="w-6 h-6 rounded-full bg-osaka-gold flex items-center justify-center text-xs font-bold text-osaka-charcoal">
-                            {{ strtoupper(substr($pin->user->name ?? '?', 0, 1)) }}
-                        </div>
-                    @endif
-                    <span class="text-xs text-gray-500">{{ $pin->user->name }}</span>
+                    <a href="{{ route('profile.show', $pin->user) }}" class="flex items-center space-x-2 hover:text-osaka-red transition-colors">
+                        @if($pin->user->avatar)
+                            <img src="{{ $pin->user->avatar }}" alt="{{ $pin->user->name }}" class="w-6 h-6 rounded-full">
+                        @else
+                            <div class="w-6 h-6 rounded-full bg-osaka-gold flex items-center justify-center text-xs font-bold text-osaka-charcoal">
+                                {{ strtoupper(substr($pin->user->name ?? '?', 0, 1)) }}
+                            </div>
+                        @endif
+                        <span class="text-xs text-gray-500">{{ $pin->user->name }}</span>
+                    </a>
                 @endif
             </div>
 

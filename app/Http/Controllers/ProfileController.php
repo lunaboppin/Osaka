@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,11 +14,33 @@ use Illuminate\View\View;
 class ProfileController extends Controller
 {
     /**
-     * Display the user's profile form.
+     * View any user's public profile.
+     */
+    public function show(User $user): View
+    {
+        $user->load('roles');
+        $pinStats = [
+            'total' => $user->pins()->count(),
+            'new' => $user->pins()->where('status', 'New')->count(),
+            'worn' => $user->pins()->where('status', 'Worn')->count(),
+            'needs_replaced' => $user->pins()->where('status', 'Needs replaced')->count(),
+        ];
+        $recentPins = $user->pins()->with('user:id,name,avatar')->withCount('updates')->latest()->take(6)->get();
+
+        return view('profile.show', [
+            'user' => $user,
+            'pinStats' => $pinStats,
+            'recentPins' => $recentPins,
+        ]);
+    }
+
+    /**
+     * Display the user's own profile edit form.
      */
     public function edit(Request $request): View
     {
         $user = $request->user();
+        $user->load('roles');
         $pinStats = [
             'total' => $user->pins()->count(),
             'new' => $user->pins()->where('status', 'New')->count(),
@@ -39,7 +62,7 @@ class ProfileController extends Controller
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $user = $request->user();
-        $user->fill($request->safe()->only('name'));
+        $user->fill($request->safe()->only(['name', 'bio']));
 
         // Handle avatar upload
         if ($request->hasFile('avatar')) {

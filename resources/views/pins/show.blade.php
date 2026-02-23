@@ -44,7 +44,7 @@
                         <h1 class="text-2xl sm:text-3xl font-bold text-osaka-charcoal">{{ $pin->title ?: 'Untitled Pin' }}</h1>
                         <div class="flex items-center mt-2 text-sm text-gray-500 space-x-4">
                             @if($pin->user)
-                                <div class="flex items-center">
+                                <a href="{{ route('profile.show', $pin->user) }}" class="flex items-center hover:text-osaka-red transition-colors">
                                     @if($pin->user->avatar)
                                         <img src="{{ $pin->user->avatar }}" alt="{{ $pin->user->name }}" class="w-5 h-5 rounded-full mr-1.5">
                                     @else
@@ -53,6 +53,7 @@
                                         </div>
                                     @endif
                                     {{ $pin->user->name }}
+                                </a>
                                 </div>
                             @endif
                             <div class="flex items-center">

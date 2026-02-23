@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\View;
@@ -27,5 +28,12 @@ class AppServiceProvider extends ServiceProvider
         });
         // Share Google Maps API key with all views
         View::share('googleMapsApiKey', config('services.google_maps.key'));
+
+        // Eager-load roles on the authenticated user for nav badge checks
+        View::composer('layouts.navigation', function ($view) {
+            if ($user = Auth::user()) {
+                $user->loadMissing('roles');
+            }
+        });
     }
 }
