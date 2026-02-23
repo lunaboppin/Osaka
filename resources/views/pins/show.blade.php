@@ -252,13 +252,13 @@
                                 </div>
 
                                 {{-- Card --}}
-                                <div class="flex-1 card overflow-hidden min-w-0">
+                                <div class="flex-1 card min-w-0">
                                     {{-- Photo --}}
                                     @if($update->photo)
-                                        <div class="relative bg-osaka-charcoal">
+                                        <div class="relative bg-osaka-charcoal overflow-hidden">
                                             <img src="{{ asset('storage/' . $update->photo) }}"
                                                  alt="Update photo"
-                                                 class="w-full max-h-[300px] object-contain mx-auto cursor-pointer"
+                                                 class="max-w-full max-h-[300px] object-contain mx-auto block cursor-pointer"
                                                  @click="$dispatch('open-lightbox', { src: '{{ asset('storage/' . $update->photo) }}' })">
                                         </div>
                                     @endif
