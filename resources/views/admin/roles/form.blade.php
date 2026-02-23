@@ -67,7 +67,8 @@
                     <p class="text-xs text-gray-400 mb-3">Select which actions users with this role can perform.</p>
 
                     @php
-                        $currentPerms = old('permissions', $role?->permissions ?? []);
+                        $rolePerms = $role ? (is_array($role->permissions) ? $role->permissions : json_decode($role->permissions, true) ?? []) : [];
+                        $currentPerms = old('permissions') !== null ? old('permissions') : $rolePerms;
                         // Group permissions by prefix
                         $grouped = collect($permissions)->groupBy(function ($label, $key) {
                             return explode('.', $key)[0];
