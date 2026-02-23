@@ -6,21 +6,21 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ config('app.name', 'Osaka Sticker Tracker') }}</title>
-        <meta name="description" content="Track and manage sticker placements across the city.">
+        <meta name="description" content="sata andagi">
         <meta name="theme-color" content="#C41E3A">
 
         {{-- Open Graph --}}
         <meta property="og:type" content="website">
         <meta property="og:site_name" content="{{ config('app.name', 'Osaka Sticker Tracker') }}">
         <meta property="og:title" content="{{ config('app.name', 'Osaka Sticker Tracker') }}">
-        <meta property="og:description" content="Track and manage sticker placements across the city.">
+        <meta property="og:description" content="sata andagi">
         <meta property="og:image" content="{{ asset('images/osaka.png') }}">
         <meta property="og:url" content="{{ url()->current() }}">
 
         {{-- Twitter / Discord --}}
         <meta name="twitter:card" content="summary">
         <meta name="twitter:title" content="{{ config('app.name', 'Osaka Sticker Tracker') }}">
-        <meta name="twitter:description" content="Track and manage sticker placements across the city.">
+        <meta name="twitter:description" content="sata andagi">
         <meta name="twitter:image" content="{{ asset('images/osaka.png') }}">
 
         <link rel="icon" type="image/png" href="{{ asset('images/osaka.png') }}">
