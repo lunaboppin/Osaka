@@ -252,7 +252,7 @@
                                 </div>
 
                                 {{-- Card --}}
-                                <div class="flex-1 card">
+                                <div class="flex-1 card overflow-hidden min-w-0">
                                     {{-- Photo --}}
                                     @if($update->photo)
                                         <div class="relative bg-osaka-charcoal">
