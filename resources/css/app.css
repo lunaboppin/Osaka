@@ -66,16 +66,16 @@
 }
 
 ::-webkit-scrollbar-track {
-    background: theme('colors.osaka.cream');
+    background: #FAF7F0;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: theme('colors.gray.300');
+    background: #D1D5DB;
     border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: theme('colors.gray.400');
+    background: #9CA3AF;
 }
 
 /* Line clamp fallback */
