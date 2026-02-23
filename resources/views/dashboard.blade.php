@@ -15,7 +15,7 @@
                         @auth
                             Track and monitor sticker conditions across the city.
                         @else
-                            Discover, track and monitor Osaka stickers across the city. Log in to start pinning!
+                            Log in to manage pins.
                         @endauth
                     </p>
                 </div>
