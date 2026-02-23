@@ -18,7 +18,7 @@
         <meta property="og:url" content="{{ url()->current() }}">
 
         {{-- Twitter / Discord --}}
-        <meta name="twitter:card" content="summary">
+        <meta name="twitter:card" content="{{ $metaCard ?? 'summary' }}">
         <meta name="twitter:title" content="{{ $metaTitle ?? config('app.name', 'Osaka Sticker Tracker') }}">
         <meta name="twitter:description" content="{{ $metaDescription ?? 'sata andagi' }}">
         <meta name="twitter:image" content="{{ $metaImage ?? asset('images/osaka.png') }}">

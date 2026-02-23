@@ -1,4 +1,12 @@
 <x-app-layout>
+    <x-slot name="pageTitle">{{ $pin->title ?: 'Pin #' . $pin->id }}</x-slot>
+    <x-slot name="metaTitle">{{ $pin->title ?: 'Pin #' . $pin->id }} · {{ $pin->status }}</x-slot>
+    <x-slot name="metaDescription">{{ $pin->status }} pin{{ $pin->user ? ' by ' . $pin->user->name : '' }}{{ $pin->stickerType ? ' · ' . $pin->stickerType->name : '' }}{{ $pin->description ? ' — ' . Str::limit($pin->description, 150) : '' }}</x-slot>
+    @if($pin->photo)
+        <x-slot name="metaImage">{{ asset('storage/' . $pin->photo) }}</x-slot>
+        <x-slot name="metaCard">summary_large_image</x-slot>
+    @endif
+
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {{-- Flash Message --}}
         @if(session('success'))
