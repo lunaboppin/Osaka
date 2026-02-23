@@ -13,7 +13,7 @@ class PinController extends Controller
     // Dedicated JSON endpoint for map
     public function json(Request $request)
     {
-        $stickerTypeId = session('current_sticker_type_id');
+        $stickerTypeId = StickerType::currentId();
         $query = Pin::forStickerType($stickerTypeId)->with('user:id,name,avatar');
 
         if ($request->has('status') && $request->status !== 'all') {
@@ -25,7 +25,7 @@ class PinController extends Controller
 
     public function index(Request $request)
     {
-        $stickerTypeId = session('current_sticker_type_id');
+        $stickerTypeId = StickerType::currentId();
         $query = Pin::forStickerType($stickerTypeId)->with('user:id,name,avatar')->withCount('updates');
 
         // Search by title or description
@@ -90,7 +90,7 @@ class PinController extends Controller
         $validated['last_checked_at'] = now();
 
         // Auto-assign to current sticker type, or fall back to first available
-        $stickerTypeId = session('current_sticker_type_id');
+        $stickerTypeId = StickerType::currentId();
         if (!$stickerTypeId) {
             $stickerTypeId = StickerType::ordered()->value('id');
         }

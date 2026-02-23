@@ -38,11 +38,15 @@ class AppServiceProvider extends ServiceProvider
             }
 
             $view->with('stickerTypes', StickerType::ordered()->get());
-            $currentStickerTypeId = session('current_sticker_type_id');
+
+            // Resolve current sticker type using centralised logic
+            $currentStickerTypeId = StickerType::currentId();
+
             $view->with('currentStickerType', $currentStickerTypeId
                 ? StickerType::find($currentStickerTypeId)
                 : null
             );
+            $view->with('currentStickerTypeId', $currentStickerTypeId);
         });
     }
 }

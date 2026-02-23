@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\StickerType;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,7 +20,7 @@ class ProfileController extends Controller
     public function show(User $user): View
     {
         $user->load('roles');
-        $stickerTypeId = session('current_sticker_type_id');
+        $stickerTypeId = StickerType::currentId();
         $pinQuery = $user->pins()->when($stickerTypeId, fn($q) => $q->where('sticker_type_id', $stickerTypeId));
         $pinStats = [
             'total' => (clone $pinQuery)->count(),
@@ -43,7 +44,7 @@ class ProfileController extends Controller
     {
         $user = $request->user();
         $user->load('roles');
-        $stickerTypeId = session('current_sticker_type_id');
+        $stickerTypeId = StickerType::currentId();
         $pinQuery = $user->pins()->when($stickerTypeId, fn($q) => $q->where('sticker_type_id', $stickerTypeId));
         $pinStats = [
             'total' => (clone $pinQuery)->count(),
@@ -57,6 +58,7 @@ class ProfileController extends Controller
             'user' => $user,
             'pinStats' => $pinStats,
             'recentPins' => $recentPins,
+            'stickerTypes' => StickerType::ordered()->get(),
         ]);
     }
 
@@ -67,6 +69,9 @@ class ProfileController extends Controller
     {
         $user = $request->user();
         $user->fill($request->safe()->only(['name', 'bio']));
+
+        // Handle default sticker type (explicit null when clearing)
+        $user->default_sticker_type_id = $request->input('default_sticker_type_id') ?: null;
 
         // Handle avatar upload
         if ($request->hasFile('avatar')) {

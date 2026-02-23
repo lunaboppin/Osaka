@@ -24,11 +24,17 @@ class User extends Authenticatable
         'authentik_id',
         'avatar',
         'bio',
+        'default_sticker_type_id',
     ];
 
     public function pins()
     {
         return $this->hasMany(Pin::class);
+    }
+
+    public function defaultStickerType()
+    {
+        return $this->belongsTo(StickerType::class, 'default_sticker_type_id');
     }
 
     /**

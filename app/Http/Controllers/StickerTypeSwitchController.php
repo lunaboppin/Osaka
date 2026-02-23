@@ -13,7 +13,9 @@ class StickerTypeSwitchController extends Controller
             'sticker_type_id' => 'nullable|exists:sticker_types,id',
         ]);
 
-        $request->session()->put('current_sticker_type_id', $validated['sticker_type_id'] ?? null);
+        // Store in session — empty string means explicitly chose "All Types"
+        $stickerTypeId = $validated['sticker_type_id'] ?? null;
+        $request->session()->put('current_sticker_type_id', $stickerTypeId);
 
         return back();
     }

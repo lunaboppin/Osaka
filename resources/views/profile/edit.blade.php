@@ -82,6 +82,21 @@
                                 <p class="text-sm text-gray-500">{{ $user->email }}</p>
                                 <p class="text-xs text-gray-400 mt-0.5">Managed by your authentication provider</p>
                             </div>
+                            @if(isset($stickerTypes) && $stickerTypes->count() > 0)
+                                <div>
+                                    <label for="default_sticker_type_id" class="form-label">Default Sticker Type</label>
+                                    <select name="default_sticker_type_id" id="default_sticker_type_id" class="form-input-osaka">
+                                        <option value="">All Types (no default)</option>
+                                        @foreach($stickerTypes as $type)
+                                            <option value="{{ $type->id }}" {{ old('default_sticker_type_id', $user->default_sticker_type_id) == $type->id ? 'selected' : '' }}>
+                                                {{ $type->display_name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <p class="text-xs text-gray-400 mt-1">Automatically selected when you log in or start a new session</p>
+                                    @error('default_sticker_type_id') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
+                                </div>
+                            @endif
                             <p class="text-xs text-gray-400">
                                 Member since {{ $user->created_at?->format('j F Y') }}
                             </p>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Pin;
 use App\Models\PinUpdate;
+use App\Models\StickerType;
 use Illuminate\Http\Request;
 
 class ReminderController extends Controller
@@ -11,7 +12,7 @@ class ReminderController extends Controller
     public function index(Request $request)
     {
         $defaults = config('osaka.reminders');
-        $stickerTypeId = session('current_sticker_type_id');
+        $stickerTypeId = StickerType::currentId();
 
         // Allow user to override threshold via query params (persisted in URL)
         $overdueDays = (int) $request->input('overdue_days', $defaults['overdue_days']);

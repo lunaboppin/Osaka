@@ -9,7 +9,7 @@ class DashboardController extends Controller
 {
     public function __invoke()
     {
-        $stickerTypeId = session('current_sticker_type_id');
+        $stickerTypeId = StickerType::currentId();
 
         $stats = [
             'total' => Pin::forStickerType($stickerTypeId)->count(),
