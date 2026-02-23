@@ -8,15 +8,17 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('pin_updates', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('pin_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
-            $table->string('status');
-            $table->string('photo')->nullable();
-            $table->text('notes')->nullable();
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('pin_updates')) {
+            Schema::create('pin_updates', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('pin_id')->constrained()->cascadeOnDelete();
+                $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
+                $table->string('status');
+                $table->string('photo')->nullable();
+                $table->text('notes')->nullable();
+                $table->timestamps();
+            });
+        }
     }
 
     public function down(): void
