@@ -21,7 +21,7 @@ class PinUpdateController extends Controller
         $validated = $request->validate([
             'status' => 'required|in:New,Worn,Needs replaced',
             'notes' => 'nullable|string|max:2000',
-            'photo' => 'nullable|image|max:4096',
+            'photo' => 'nullable|image|max:102400',
         ]);
 
         $photoPath = null;

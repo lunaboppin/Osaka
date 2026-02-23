@@ -151,7 +151,7 @@ class PinController extends Controller
             'status' => 'required|in:New,Worn,Needs replaced',
             'latitude' => 'nullable|numeric',
             'longitude' => 'nullable|numeric',
-            'photo' => 'nullable|image|max:4096',
+            'photo' => 'nullable|image|max:102400',
         ]);
 
         // Track what changed for the timeline

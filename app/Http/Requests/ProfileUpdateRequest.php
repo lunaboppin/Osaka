@@ -18,7 +18,7 @@ class ProfileUpdateRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'bio' => ['nullable', 'string', 'max:500'],
-            'avatar' => ['nullable', 'image', 'max:2048'],
+            'avatar' => ['nullable', 'image', 'max:102400'],
             'remove_avatar' => ['nullable', 'boolean'],
             'default_sticker_type_id' => ['nullable', 'exists:sticker_types,id'],
         ];
