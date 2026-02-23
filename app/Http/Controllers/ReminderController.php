@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pin;
+use App\Models\PinUpdate;
 use Illuminate\Http\Request;
 
 class ReminderController extends Controller
@@ -59,6 +60,15 @@ class ReminderController extends Controller
     {
         $pin->update(['last_checked_at' => now()]);
 
+        // Record a timeline entry for the check
+        PinUpdate::create([
+            'pin_id' => $pin->id,
+            'user_id' => $request->user()->id,
+            'status' => $pin->status,
+            'photo' => $pin->photo,
+            'notes' => 'Marked as checked — no changes.',
+        ]);
+
         if ($request->wantsJson() || $request->ajax()) {
             return response()->json([
                 'message' => 'Pin marked as checked!',
@@ -80,6 +90,18 @@ class ReminderController extends Controller
         ]);
 
         Pin::whereIn('id', $validated['pin_ids'])->update(['last_checked_at' => now()]);
+
+        // Record timeline entries for bulk checks
+        $pins = Pin::whereIn('id', $validated['pin_ids'])->get();
+        foreach ($pins as $pin) {
+            PinUpdate::create([
+                'pin_id' => $pin->id,
+                'user_id' => $request->user()->id,
+                'status' => $pin->status,
+                'photo' => $pin->photo,
+                'notes' => 'Marked as checked — no changes.',
+            ]);
+        }
 
         $count = count($validated['pin_ids']);
 

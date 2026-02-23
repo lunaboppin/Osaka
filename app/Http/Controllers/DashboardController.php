@@ -17,6 +17,7 @@ class DashboardController extends Controller
         ];
 
         $recentPins = Pin::with('user:id,name,avatar')
+            ->withCount('updates')
             ->latest()
             ->take(6)
             ->get();

@@ -16,13 +16,13 @@ return [
 
     'reminders' => [
         // Default number of days before a pin is considered "overdue"
-        'overdue_days' => (int) env('OSAKA_REMINDER_OVERDUE_DAYS', 30),
+        'overdue_days' => (int) env('OSAKA_REMINDER_OVERDUE_DAYS', 100),
 
         // Number of days before a pin enters the "warning" tier (approaching overdue)
-        'warning_days' => (int) env('OSAKA_REMINDER_WARNING_DAYS', 20),
+        'warning_days' => (int) env('OSAKA_REMINDER_WARNING_DAYS', 85),
 
         // Maximum configurable threshold (for the UI slider)
-        'max_days' => (int) env('OSAKA_REMINDER_MAX_DAYS', 90),
+        'max_days' => (int) env('OSAKA_REMINDER_MAX_DAYS', 100),
 
         // Minimum configurable threshold (for the UI slider)
         'min_days' => (int) env('OSAKA_REMINDER_MIN_DAYS', 7),

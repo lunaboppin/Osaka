@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pin;
+use App\Models\PinUpdate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -22,7 +23,7 @@ class PinController extends Controller
 
     public function index(Request $request)
     {
-        $query = Pin::with('user:id,name,avatar');
+        $query = Pin::with('user:id,name,avatar')->withCount('updates');
 
         // Search by title or description
         if ($request->filled('search')) {
@@ -57,7 +58,7 @@ class PinController extends Controller
 
     public function show(Pin $pin)
     {
-        $pin->load('user:id,name,avatar');
+        $pin->load(['user:id,name,avatar', 'updates.user:id,name,avatar']);
         return view('pins.show', compact('pin'));
     }
 
@@ -86,6 +87,15 @@ class PinController extends Controller
         $validated['last_checked_at'] = now();
 
         $pin = Pin::create($validated);
+
+        // Record the initial state as the first timeline entry
+        PinUpdate::create([
+            'pin_id' => $pin->id,
+            'user_id' => $pin->user_id,
+            'status' => $pin->status,
+            'photo' => $pin->photo,
+            'notes' => 'Initial pin creation.',
+        ]);
 
         if ($request->wantsJson() || $request->ajax()) {
             return response()->json(['message' => 'Pin added successfully!', 'pin' => $pin], 201);
@@ -118,12 +128,12 @@ class PinController extends Controller
             'photo' => 'nullable|image|max:4096',
         ]);
 
+        // Track what changed for the timeline
+        $oldStatus = $pin->status;
+        $oldPhoto = $pin->photo;
+
         // Handle photo replacement
         if ($request->hasFile('photo')) {
-            // Delete old photo
-            if ($pin->photo) {
-                Storage::disk('public')->delete($pin->photo);
-            }
             $path = $request->file('photo')->store('pins', 'public');
             $validated['photo'] = $path;
         }
@@ -137,6 +147,30 @@ class PinController extends Controller
         }
 
         $pin->update($validated);
+
+        // Auto-record a timeline entry if status or photo changed
+        $statusChanged = $pin->status !== $oldStatus;
+        $photoChanged = $pin->photo !== $oldPhoto;
+        if ($statusChanged || $photoChanged) {
+            $notes = [];
+            if ($statusChanged) {
+                $notes[] = "Status changed from {$oldStatus} to {$pin->status}.";
+            }
+            if ($photoChanged && $pin->photo) {
+                $notes[] = 'Photo updated.';
+            }
+
+            PinUpdate::create([
+                'pin_id' => $pin->id,
+                'user_id' => auth()->id(),
+                'status' => $pin->status,
+                'photo' => $pin->photo,
+                'notes' => implode(' ', $notes),
+            ]);
+
+            $pin->update(['last_checked_at' => now()]);
+        }
+
         return redirect()->route('pins.show', $pin)->with('success', 'Pin updated!');
     }
 

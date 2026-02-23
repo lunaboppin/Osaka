@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PinController;
+use App\Http\Controllers\PinUpdateController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReminderController;
 use Laravel\Socialite\Facades\Socialite;
@@ -35,6 +36,10 @@ Route::middleware('auth')->group(function () {
     Route::put('/pins/{pin}', [PinController::class, 'update'])->name('pins.update');
     Route::delete('/pins/{pin}', [PinController::class, 'destroy'])->name('pins.destroy');
     Route::post('/pins', [PinController::class, 'store'])->name('pins.store');
+
+    // Pin updates (timeline)
+    Route::post('/pins/{pin}/updates', [PinUpdateController::class, 'store'])->name('pins.updates.store');
+    Route::delete('/pins/{pin}/updates/{update}', [PinUpdateController::class, 'destroy'])->name('pins.updates.destroy');
 
     // Reminders
     Route::get('/reminders', [ReminderController::class, 'index'])->name('reminders.index');

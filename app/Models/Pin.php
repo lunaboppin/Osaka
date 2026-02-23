@@ -22,6 +22,16 @@ class Pin extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function updates()
+    {
+        return $this->hasMany(PinUpdate::class)->latest();
+    }
+
+    public function latestUpdate()
+    {
+        return $this->hasOne(PinUpdate::class)->latestOfMany();
+    }
+
     public function getStatusColorAttribute(): string
     {
         return match ($this->status) {
