@@ -42,4 +42,8 @@ return [
         'redirect' => env('AUTHENTIK_REDIRECT_URI')
     ],
 
+    'google_maps' => [
+        'key' => env('GOOGLE_MAPS_API_KEY'),
+    ],
+
 ];

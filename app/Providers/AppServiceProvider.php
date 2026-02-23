@@ -26,6 +26,6 @@ class AppServiceProvider extends ServiceProvider
             $event->extendSocialite('authentik', \SocialiteProviders\Authentik\Provider::class);
         });
         // Share Google Maps API key with all views
-        View::share('googleMapsApiKey', env('GOOGLE_MAPS_API_KEY'));
+        View::share('googleMapsApiKey', config('services.google_maps.key'));
     }
 }

@@ -1,3 +1,87 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    .btn-primary {
+        @apply inline-flex items-center justify-center px-5 py-2.5 bg-osaka-red text-white font-semibold rounded-lg shadow-sm hover:bg-osaka-red-dark focus:outline-none focus:ring-2 focus:ring-osaka-red focus:ring-offset-2 transition-all duration-200;
+    }
+
+    .btn-secondary {
+        @apply inline-flex items-center justify-center px-5 py-2.5 bg-white text-osaka-charcoal font-semibold rounded-lg shadow-sm border border-gray-200 hover:bg-osaka-cream hover:border-osaka-gold focus:outline-none focus:ring-2 focus:ring-osaka-gold focus:ring-offset-2 transition-all duration-200;
+    }
+
+    .btn-danger {
+        @apply inline-flex items-center justify-center px-5 py-2.5 bg-red-600 text-white font-semibold rounded-lg shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-all duration-200;
+    }
+
+    .btn-success {
+        @apply inline-flex items-center justify-center px-5 py-2.5 bg-osaka-green text-white font-semibold rounded-lg shadow-sm hover:bg-osaka-green-light focus:outline-none focus:ring-2 focus:ring-osaka-green focus:ring-offset-2 transition-all duration-200;
+    }
+
+    .btn-gold {
+        @apply inline-flex items-center justify-center px-5 py-2.5 bg-osaka-gold text-osaka-charcoal font-semibold rounded-lg shadow-sm hover:bg-osaka-gold-light focus:outline-none focus:ring-2 focus:ring-osaka-gold focus:ring-offset-2 transition-all duration-200;
+    }
+
+    .btn-sm {
+        @apply px-3 py-1.5 text-sm;
+    }
+
+    .card {
+        @apply bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-200 hover:shadow-md;
+    }
+
+    .card-body {
+        @apply p-5;
+    }
+
+    .form-input-osaka {
+        @apply w-full border border-gray-200 rounded-lg px-4 py-2.5 bg-white text-osaka-charcoal placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-osaka-gold focus:border-osaka-gold transition-all duration-200;
+    }
+
+    .form-label {
+        @apply block text-sm font-semibold text-osaka-charcoal mb-1.5;
+    }
+
+    .badge {
+        @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold;
+    }
+
+    .badge-new {
+        @apply badge bg-emerald-100 text-emerald-800;
+    }
+
+    .badge-worn {
+        @apply badge bg-amber-100 text-amber-800;
+    }
+
+    .badge-needs-replaced {
+        @apply badge bg-red-100 text-red-800;
+    }
+}
+
+/* Custom scrollbar for webkit browsers */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: theme('colors.osaka.cream');
+}
+
+::-webkit-scrollbar-thumb {
+    background: theme('colors.gray.300');
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: theme('colors.gray.400');
+}
+
+/* Line clamp fallback */
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}

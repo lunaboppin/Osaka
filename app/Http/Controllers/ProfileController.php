@@ -16,8 +16,19 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+        $user = $request->user();
+        $pinStats = [
+            'total' => $user->pins()->count(),
+            'new' => $user->pins()->where('status', 'New')->count(),
+            'worn' => $user->pins()->where('status', 'Worn')->count(),
+            'needs_replaced' => $user->pins()->where('status', 'Needs replaced')->count(),
+        ];
+        $recentPins = $user->pins()->latest()->take(6)->get();
+
         return view('profile.edit', [
-            'user' => $request->user(),
+            'user' => $user,
+            'pinStats' => $pinStats,
+            'recentPins' => $recentPins,
         ]);
     }
 

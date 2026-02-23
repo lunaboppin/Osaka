@@ -23,4 +23,9 @@ class User extends Authenticatable
         'authentik_id',
         'avatar',
     ];
+
+    public function pins()
+    {
+        return $this->hasMany(Pin::class);
+    }
 }
