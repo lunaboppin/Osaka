@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\StickerTypeController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\DashboardController;
@@ -8,6 +9,7 @@ use App\Http\Controllers\PinController;
 use App\Http\Controllers\PinUpdateController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReminderController;
+use App\Http\Controllers\StickerTypeSwitchController;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Route;
 
@@ -51,6 +53,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/pins/{pin}/check', [ReminderController::class, 'check'])->name('pins.check');
     Route::post('/reminders/bulk-check', [ReminderController::class, 'bulkCheck'])->name('reminders.bulk-check');
 
+    // Sticker type switcher
+    Route::post('/switch-sticker-type', StickerTypeSwitchController::class)->name('sticker-type.switch');
+
     // Admin routes (permission-gated)
     Route::prefix('admin')->middleware('permission:admin.access')->group(function () {
         Route::get('/roles', [RoleController::class, 'index'])->name('admin.roles.index');
@@ -63,6 +68,13 @@ Route::middleware('auth')->group(function () {
         Route::get('/users', [AdminUserController::class, 'index'])->name('admin.users.index');
         Route::get('/users/{user}/edit', [AdminUserController::class, 'edit'])->name('admin.users.edit');
         Route::put('/users/{user}', [AdminUserController::class, 'update'])->name('admin.users.update');
+
+        Route::get('/sticker-types', [StickerTypeController::class, 'index'])->name('admin.sticker-types.index');
+        Route::get('/sticker-types/create', [StickerTypeController::class, 'create'])->name('admin.sticker-types.create');
+        Route::post('/sticker-types', [StickerTypeController::class, 'store'])->name('admin.sticker-types.store');
+        Route::get('/sticker-types/{stickerType}/edit', [StickerTypeController::class, 'edit'])->name('admin.sticker-types.edit');
+        Route::put('/sticker-types/{stickerType}', [StickerTypeController::class, 'update'])->name('admin.sticker-types.update');
+        Route::delete('/sticker-types/{stickerType}', [StickerTypeController::class, 'destroy'])->name('admin.sticker-types.destroy');
     });
 });
 

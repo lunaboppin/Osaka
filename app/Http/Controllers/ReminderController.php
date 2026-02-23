@@ -11,6 +11,7 @@ class ReminderController extends Controller
     public function index(Request $request)
     {
         $defaults = config('osaka.reminders');
+        $stickerTypeId = session('current_sticker_type_id');
 
         // Allow user to override threshold via query params (persisted in URL)
         $overdueDays = (int) $request->input('overdue_days', $defaults['overdue_days']);
@@ -24,7 +25,8 @@ class ReminderController extends Controller
         $statusFilter = $request->input('status');
 
         // Build the query for ALL pins that need attention (warning + overdue)
-        $query = Pin::with('user:id,name,avatar')
+        $query = Pin::forStickerType($stickerTypeId)
+            ->with('user:id,name,avatar')
             ->needsAttention($warningDays);
 
         if ($statusFilter && $statusFilter !== 'all') {
@@ -37,8 +39,8 @@ class ReminderController extends Controller
         $pins = $query->paginate(12)->withQueryString();
 
         // Counts for stat cards (using default threshold)
-        $overdueCount = Pin::overdue($overdueDays)->count();
-        $warningCount = Pin::warning($warningDays, $overdueDays)->count();
+        $overdueCount = Pin::forStickerType($stickerTypeId)->overdue($overdueDays)->count();
+        $warningCount = Pin::forStickerType($stickerTypeId)->warning($warningDays, $overdueDays)->count();
         $totalNeedAttention = $overdueCount + $warningCount;
 
         return view('reminders.index', compact(

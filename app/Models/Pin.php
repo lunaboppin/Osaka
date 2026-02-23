@@ -8,7 +8,7 @@ use Carbon\Carbon;
 class Pin extends Model
 {
     protected $fillable = [
-        'title', 'description', 'latitude', 'longitude', 'status', 'photo', 'user_id', 'last_checked_at'
+        'title', 'description', 'latitude', 'longitude', 'status', 'photo', 'user_id', 'sticker_type_id', 'last_checked_at'
     ];
 
     protected $casts = [
@@ -20,6 +20,23 @@ class Pin extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function stickerType()
+    {
+        return $this->belongsTo(StickerType::class);
+    }
+
+    /**
+     * Scope: filter pins by sticker type. Null = show all.
+     */
+    public function scopeForStickerType($query, $stickerTypeId)
+    {
+        if ($stickerTypeId) {
+            return $query->where('sticker_type_id', $stickerTypeId);
+        }
+
+        return $query;
     }
 
     public function updates()

@@ -19,13 +19,15 @@ class ProfileController extends Controller
     public function show(User $user): View
     {
         $user->load('roles');
+        $stickerTypeId = session('current_sticker_type_id');
+        $pinQuery = $user->pins()->when($stickerTypeId, fn($q) => $q->where('sticker_type_id', $stickerTypeId));
         $pinStats = [
-            'total' => $user->pins()->count(),
-            'new' => $user->pins()->where('status', 'New')->count(),
-            'worn' => $user->pins()->where('status', 'Worn')->count(),
-            'needs_replaced' => $user->pins()->where('status', 'Needs replaced')->count(),
+            'total' => (clone $pinQuery)->count(),
+            'new' => (clone $pinQuery)->where('status', 'New')->count(),
+            'worn' => (clone $pinQuery)->where('status', 'Worn')->count(),
+            'needs_replaced' => (clone $pinQuery)->where('status', 'Needs replaced')->count(),
         ];
-        $recentPins = $user->pins()->with('user:id,name,avatar')->withCount('updates')->latest()->take(6)->get();
+        $recentPins = (clone $pinQuery)->with('user:id,name,avatar')->withCount('updates')->latest()->take(6)->get();
 
         return view('profile.show', [
             'user' => $user,
@@ -41,13 +43,15 @@ class ProfileController extends Controller
     {
         $user = $request->user();
         $user->load('roles');
+        $stickerTypeId = session('current_sticker_type_id');
+        $pinQuery = $user->pins()->when($stickerTypeId, fn($q) => $q->where('sticker_type_id', $stickerTypeId));
         $pinStats = [
-            'total' => $user->pins()->count(),
-            'new' => $user->pins()->where('status', 'New')->count(),
-            'worn' => $user->pins()->where('status', 'Worn')->count(),
-            'needs_replaced' => $user->pins()->where('status', 'Needs replaced')->count(),
+            'total' => (clone $pinQuery)->count(),
+            'new' => (clone $pinQuery)->where('status', 'New')->count(),
+            'worn' => (clone $pinQuery)->where('status', 'Worn')->count(),
+            'needs_replaced' => (clone $pinQuery)->where('status', 'Needs replaced')->count(),
         ];
-        $recentPins = $user->pins()->latest()->take(6)->get();
+        $recentPins = (clone $pinQuery)->latest()->take(6)->get();
 
         return view('profile.edit', [
             'user' => $user,

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Pin;
 use App\Models\PinUpdate;
+use App\Models\StickerType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -12,7 +13,8 @@ class PinController extends Controller
     // Dedicated JSON endpoint for map
     public function json(Request $request)
     {
-        $query = Pin::with('user:id,name,avatar');
+        $stickerTypeId = session('current_sticker_type_id');
+        $query = Pin::forStickerType($stickerTypeId)->with('user:id,name,avatar');
 
         if ($request->has('status') && $request->status !== 'all') {
             $query->where('status', $request->status);
@@ -23,7 +25,8 @@ class PinController extends Controller
 
     public function index(Request $request)
     {
-        $query = Pin::with('user:id,name,avatar')->withCount('updates');
+        $stickerTypeId = session('current_sticker_type_id');
+        $query = Pin::forStickerType($stickerTypeId)->with('user:id,name,avatar')->withCount('updates');
 
         // Search by title or description
         if ($request->filled('search')) {
@@ -58,7 +61,7 @@ class PinController extends Controller
 
     public function show(Pin $pin)
     {
-        $pin->load(['user:id,name,avatar', 'user.roles', 'updates.user:id,name,avatar', 'updates.user.roles']);
+        $pin->load(['user:id,name,avatar', 'user.roles', 'stickerType', 'updates.user:id,name,avatar', 'updates.user.roles']);
         return view('pins.show', compact('pin'));
     }
 
@@ -85,6 +88,13 @@ class PinController extends Controller
 
         $validated['user_id'] = $request->user()->id;
         $validated['last_checked_at'] = now();
+
+        // Auto-assign to current sticker type, or fall back to first available
+        $stickerTypeId = session('current_sticker_type_id');
+        if (!$stickerTypeId) {
+            $stickerTypeId = StickerType::ordered()->value('id');
+        }
+        $validated['sticker_type_id'] = $stickerTypeId;
 
         $pin = Pin::create($validated);
 

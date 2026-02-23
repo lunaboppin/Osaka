@@ -1,0 +1,20 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\StickerType;
+use Illuminate\Http\Request;
+
+class StickerTypeSwitchController extends Controller
+{
+    public function __invoke(Request $request)
+    {
+        $validated = $request->validate([
+            'sticker_type_id' => 'nullable|exists:sticker_types,id',
+        ]);
+
+        $request->session()->put('current_sticker_type_id', $validated['sticker_type_id'] ?? null);
+
+        return back();
+    }
+}

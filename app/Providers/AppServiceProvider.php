@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\StickerType;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Config;
@@ -30,10 +31,18 @@ class AppServiceProvider extends ServiceProvider
         View::share('googleMapsApiKey', config('services.google_maps.key'));
 
         // Eager-load roles on the authenticated user for nav badge checks
+        // Share sticker types + current selection with navigation
         View::composer('layouts.navigation', function ($view) {
             if ($user = Auth::user()) {
                 $user->loadMissing('roles');
             }
+
+            $view->with('stickerTypes', StickerType::ordered()->get());
+            $currentStickerTypeId = session('current_sticker_type_id');
+            $view->with('currentStickerType', $currentStickerTypeId
+                ? StickerType::find($currentStickerTypeId)
+                : null
+            );
         });
     }
 }

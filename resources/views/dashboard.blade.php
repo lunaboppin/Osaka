@@ -17,6 +17,11 @@
                         @else
                             Log in to manage pins.
                         @endauth
+                        @if(isset($currentStickerType) && $currentStickerType)
+                            <span class="inline-flex items-center ml-2 px-2 py-0.5 rounded-full text-xs font-medium text-white" style="background-color: {{ $currentStickerType->color }}">
+                                {{ $currentStickerType->display_name }}
+                            </span>
+                        @endif
                     </p>
                 </div>
                 @auth

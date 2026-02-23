@@ -45,6 +45,11 @@
                                 <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
                                 Roles
                             </a>
+                            <a href="{{ route('admin.sticker-types.index') }}"
+                               class="inline-flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all duration-200 {{ request()->routeIs('admin.sticker-types.*') ? 'text-osaka-gold bg-white/10' : 'text-osaka-cream/70 hover:text-osaka-cream hover:bg-white/5' }}">
+                                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"/></svg>
+                                Sticker Types
+                            </a>
                         @endif
                     @endauth
                     @guest
@@ -57,9 +62,56 @@
                 </div>
             </div>
 
-            <!-- User Dropdown -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
+            <!-- Sticker Type Switcher + User Dropdown -->
+            <div class="hidden sm:flex sm:items-center sm:ms-6 sm:gap-2">
                 @auth
+                    {{-- Sticker Type Switcher --}}
+                    @if(isset($stickerTypes) && $stickerTypes->count() > 0)
+                        <x-dropdown align="right" width="48">
+                            <x-slot name="trigger">
+                                <button class="inline-flex items-center px-3 py-2 text-sm font-medium rounded-md text-osaka-cream/80 hover:text-osaka-cream hover:bg-white/5 focus:outline-none transition-all duration-200 border border-white/10">
+                                    @if(isset($currentStickerType) && $currentStickerType)
+                                        <span class="w-2.5 h-2.5 rounded-full mr-2 shrink-0" style="background-color: {{ $currentStickerType->color }}"></span>
+                                        <span class="truncate max-w-[120px]">{{ $currentStickerType->display_name }}</span>
+                                    @else
+                                        <svg class="w-4 h-4 mr-1.5 text-osaka-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"/></svg>
+                                        <span>All Types</span>
+                                    @endif
+                                    <svg class="fill-current h-4 w-4 ml-1 shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                            </x-slot>
+                            <x-slot name="content">
+                                <div class="px-3 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">Switch Sticker Type</div>
+                                <form method="POST" action="{{ route('sticker-type.switch') }}">
+                                    @csrf
+                                    <input type="hidden" name="sticker_type_id" value="">
+                                    <button type="submit" class="block w-full px-4 py-2 text-start text-sm leading-5 transition duration-150 ease-in-out {{ !isset($currentStickerType) || !$currentStickerType ? 'text-osaka-gold bg-osaka-gold/10 font-semibold' : 'text-gray-700 hover:bg-gray-100' }}">
+                                        <span class="flex items-center">
+                                            <svg class="w-4 h-4 mr-2 text-osaka-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+                                            All Sticker Types
+                                        </span>
+                                    </button>
+                                </form>
+                                <div class="border-t border-gray-100 my-1"></div>
+                                @foreach($stickerTypes as $type)
+                                    <form method="POST" action="{{ route('sticker-type.switch') }}">
+                                        @csrf
+                                        <input type="hidden" name="sticker_type_id" value="{{ $type->id }}">
+                                        <button type="submit" class="block w-full px-4 py-2 text-start text-sm leading-5 transition duration-150 ease-in-out {{ isset($currentStickerType) && $currentStickerType && $currentStickerType->id === $type->id ? 'text-osaka-gold bg-osaka-gold/10 font-semibold' : 'text-gray-700 hover:bg-gray-100' }}">
+                                            <span class="flex items-center">
+                                                <span class="w-2.5 h-2.5 rounded-full mr-2 shrink-0" style="background-color: {{ $type->color }}"></span>
+                                                {{ $type->display_name }}
+                                            </span>
+                                        </button>
+                                    </form>
+                                @endforeach
+                            </x-slot>
+                        </x-dropdown>
+                    @endif
+
+                    {{-- User Dropdown --}}
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
                             <button class="inline-flex items-center px-3 py-2 text-sm font-medium rounded-md text-osaka-cream/80 hover:text-osaka-cream hover:bg-white/5 focus:outline-none transition-all duration-200">
@@ -85,6 +137,9 @@
                             </x-dropdown-link>
                             @if(Auth::user()->hasPermission('admin.access'))
                                 <div class="border-t border-gray-100 my-1"></div>
+                                <x-dropdown-link :href="route('admin.sticker-types.index')">
+                                    {{ __('Manage Sticker Types') }}
+                                </x-dropdown-link>
                                 <x-dropdown-link :href="route('admin.roles.index')">
                                     {{ __('Manage Roles') }}
                                 </x-dropdown-link>
@@ -146,6 +201,10 @@
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
                         Roles
                     </a>
+                    <a href="{{ route('admin.sticker-types.index') }}" class="flex items-center px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('admin.sticker-types.*') ? 'text-osaka-gold bg-white/10' : 'text-osaka-cream/70 hover:text-osaka-cream hover:bg-white/5' }}">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"/></svg>
+                        Sticker Types
+                    </a>
                 @endif
             @endauth
             @guest
@@ -155,6 +214,33 @@
                 </a>
             @endguest
         </div>
+
+        {{-- Mobile Sticker Type Switcher --}}
+        @auth
+            @if(isset($stickerTypes) && $stickerTypes->count() > 0)
+                <div class="pt-3 pb-2 border-t border-white/10 px-4">
+                    <div class="text-xs font-semibold text-osaka-cream/40 uppercase tracking-wider mb-2 px-3">Sticker Type</div>
+                    <form method="POST" action="{{ route('sticker-type.switch') }}">
+                        @csrf
+                        <input type="hidden" name="sticker_type_id" value="">
+                        <button type="submit" class="flex items-center w-full px-3 py-2 rounded-md text-sm font-medium {{ !isset($currentStickerType) || !$currentStickerType ? 'text-osaka-gold bg-white/10' : 'text-osaka-cream/70 hover:text-osaka-cream hover:bg-white/5' }}">
+                            <svg class="w-4 h-4 mr-2 text-osaka-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+                            All Types
+                        </button>
+                    </form>
+                    @foreach($stickerTypes as $type)
+                        <form method="POST" action="{{ route('sticker-type.switch') }}">
+                            @csrf
+                            <input type="hidden" name="sticker_type_id" value="{{ $type->id }}">
+                            <button type="submit" class="flex items-center w-full px-3 py-2 rounded-md text-sm font-medium {{ isset($currentStickerType) && $currentStickerType && $currentStickerType->id === $type->id ? 'text-osaka-gold bg-white/10' : 'text-osaka-cream/70 hover:text-osaka-cream hover:bg-white/5' }}">
+                                <span class="w-3 h-3 rounded-full mr-2 shrink-0" style="background-color: {{ $type->color }}"></span>
+                                {{ $type->display_name }}
+                            </button>
+                        </form>
+                    @endforeach
+                </div>
+            @endif
+        @endauth
 
         @auth
             <div class="pt-4 pb-3 border-t border-white/10 px-4">
