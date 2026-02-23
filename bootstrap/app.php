@@ -13,9 +13,6 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
-    })
-    ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'auth' => RedirectIfUnauthenticated::class,
             'permission' => CheckPermission::class,

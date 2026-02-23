@@ -9,14 +9,14 @@ class RoleSeeder extends Seeder
 {
     public function run(): void
     {
-        Role::firstOrCreate(['name' => 'admin'], [
+        Role::updateOrCreate(['name' => 'admin'], [
             'display_name' => 'Admin',
             'color' => '#C41E3A',
             'priority' => 100,
             'permissions' => ['*'],
         ]);
 
-        Role::firstOrCreate(['name' => 'moderator'], [
+        Role::updateOrCreate(['name' => 'moderator'], [
             'display_name' => 'Moderator',
             'color' => '#D4A843',
             'priority' => 50,
@@ -35,7 +35,7 @@ class RoleSeeder extends Seeder
             ],
         ]);
 
-        Role::firstOrCreate(['name' => 'member'], [
+        Role::updateOrCreate(['name' => 'member'], [
             'display_name' => 'Member',
             'color' => '#6B7280',
             'priority' => 10,

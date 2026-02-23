@@ -32,6 +32,11 @@ class AuthController extends Controller
                 $user->update(['avatar' => $authentikUser->getAvatar()]);
             }
 
+            // Auto-assign default member role to new users
+            if ($user->wasRecentlyCreated) {
+                $user->assignRole('member');
+            }
+
             Auth::login($user, true);
 
             return redirect()->route('dashboard');

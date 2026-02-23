@@ -20,8 +20,8 @@ Route::get('/', DashboardController::class)->name('dashboard');
 // Always accessible: pins JSON endpoint
 Route::get('/pins/json', [PinController::class, 'json'])->name('pins.json');
 
-// Public profile pages
-Route::get('/users/{user}', [ProfileController::class, 'show'])->name('profile.show');
+// Profile pages (require auth + permission)
+Route::get('/users/{user}', [ProfileController::class, 'show'])->middleware(['auth', 'permission:users.view_profiles'])->name('profile.show');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', function () {
