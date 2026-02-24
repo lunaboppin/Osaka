@@ -41,6 +41,8 @@ class Role extends Model
             'audit.view' => 'View audit log',
             'leaderboard.view' => 'View leaderboard',
             'xp.view_activity' => 'View XP activity pages',
+            'xp.manage' => 'Manage & revoke user XP',
+            'webhooks.manage' => 'Manage Discord webhooks',
         ];
     }
 

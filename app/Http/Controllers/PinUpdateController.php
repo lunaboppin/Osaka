@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Pin;
 use App\Models\PinUpdate;
+use App\Services\DiscordWebhookService;
 use App\Services\XpService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -53,6 +54,10 @@ class PinUpdateController extends Controller
             $xp->award($request->user(), 'photo_added', "Added photo to update on pin: {$pin->title}", $update);
         }
         $request->user()->refresh();
+
+        // Discord webhook
+        app(DiscordWebhookService::class)->notifyUpdatePosted($update, $pin, $request->user());
+
         $flash = 'Update added to timeline!';
         if ($request->user()->level > $oldLevel) {
             $flash .= " Level up! You're now Level {$request->user()->level} — {$request->user()->level_name}!";

@@ -35,6 +35,7 @@ class RoleSeeder extends Seeder
                 'audit.view',
                 'leaderboard.view',
                 'xp.view_activity',
+                'xp.manage',
             ],
         ]);
 

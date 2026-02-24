@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Pin;
 use App\Models\PinUpdate;
 use App\Models\StickerType;
+use App\Services\DiscordWebhookService;
 use App\Services\XpService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -124,6 +125,9 @@ class PinController extends Controller
             $xp->award($request->user(), 'photo_added', "Added photo to pin: {$pin->title}", $pin);
         }
         $request->user()->refresh();
+
+        // Discord webhook
+        app(DiscordWebhookService::class)->notifyPinCreated($pin, $request->user());
 
         if ($request->wantsJson() || $request->ajax()) {
             return response()->json(['message' => 'Pin added successfully!', 'pin' => $pin], 201);
@@ -247,6 +251,9 @@ class PinController extends Controller
 
         // Deduct XP
         app(XpService::class)->deduct($user, 'pin_deleted', "Deleted pin: {$pin->title}", $pin);
+
+        // Discord webhook
+        app(DiscordWebhookService::class)->notifyPinDeleted($pin, $user);
 
         $pin->delete();
         return redirect()->route('pins.index')->with('success', 'Pin deleted!');

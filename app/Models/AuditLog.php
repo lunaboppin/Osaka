@@ -62,6 +62,10 @@ class AuditLog extends Model
             'role_assigned' => 'purple',
             'role_removed' => 'purple',
             'bulk_check' => 'blue',
+            'xp_revoked' => 'red',
+            'xp_backfill' => 'amber',
+            'level_up' => 'emerald',
+            'webhook_test' => 'blue',
             default => 'gray',
         };
     }

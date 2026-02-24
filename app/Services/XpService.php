@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\AuditLog;
 use App\Models\User;
 use App\Models\XpTransaction;
+use App\Services\DiscordWebhookService;
 use Illuminate\Database\Eloquent\Model;
 
 class XpService
@@ -47,12 +48,18 @@ class XpService
         $user->refresh();
         $newLevel = $this->getLevel($user->total_xp);
 
-        // Log level-up
+        // Log level-up + Discord notification
         if ($newLevel > $oldLevel) {
             AuditLog::log(
                 'level_up',
                 "Reached Level {$newLevel} — {$this->getLevelName($newLevel)}",
                 $user,
+            );
+
+            app(DiscordWebhookService::class)->notifyLevelUp(
+                $user,
+                $newLevel,
+                $this->getLevelName($newLevel),
             );
         }
 

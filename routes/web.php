@@ -4,6 +4,8 @@ use App\Http\Controllers\Admin\AuditLogController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\StickerTypeController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\Admin\DiscordWebhookController;
+use App\Http\Controllers\Admin\XpController as AdminXpController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LeaderboardController;
@@ -90,6 +92,22 @@ Route::middleware('auth')->group(function () {
         });
 
         Route::get('/audit-log', [AuditLogController::class, 'index'])->middleware('permission:audit.view')->name('admin.audit-log.index');
+
+        Route::middleware('permission:webhooks.manage')->group(function () {
+            Route::get('/discord-webhooks', [DiscordWebhookController::class, 'index'])->name('admin.discord-webhooks.index');
+            Route::get('/discord-webhooks/create', [DiscordWebhookController::class, 'create'])->name('admin.discord-webhooks.create');
+            Route::post('/discord-webhooks', [DiscordWebhookController::class, 'store'])->name('admin.discord-webhooks.store');
+            Route::get('/discord-webhooks/{discordWebhook}/edit', [DiscordWebhookController::class, 'edit'])->name('admin.discord-webhooks.edit');
+            Route::put('/discord-webhooks/{discordWebhook}', [DiscordWebhookController::class, 'update'])->name('admin.discord-webhooks.update');
+            Route::delete('/discord-webhooks/{discordWebhook}', [DiscordWebhookController::class, 'destroy'])->name('admin.discord-webhooks.destroy');
+            Route::post('/discord-webhooks/{discordWebhook}/test', [DiscordWebhookController::class, 'test'])->name('admin.discord-webhooks.test');
+        });
+
+        Route::middleware('permission:xp.manage')->group(function () {
+            Route::get('/xp', [AdminXpController::class, 'index'])->name('admin.xp.index');
+            Route::get('/xp/{user}', [AdminXpController::class, 'show'])->name('admin.xp.show');
+            Route::post('/xp/{user}/revoke', [AdminXpController::class, 'revoke'])->name('admin.xp.revoke');
+        });
     });
 });
 
