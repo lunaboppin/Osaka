@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Traits\Auditable;
 use Illuminate\Database\Eloquent\Model;
 
 class Role extends Model
 {
+    use Auditable;
+
     protected $fillable = [
         'name', 'display_name', 'color', 'permissions', 'priority',
     ];
@@ -35,6 +38,7 @@ class Role extends Model
             'roles.manage' => 'Manage roles',
             'users.manage' => 'Manage users & assign roles',
             'admin.access' => 'Access admin panel',
+            'audit.view' => 'View audit log',
         ];
     }
 

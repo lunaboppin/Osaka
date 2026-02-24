@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\Auditable;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 
 class Pin extends Model
 {
+    use Auditable;
+
     protected $fillable = [
         'title', 'description', 'latitude', 'longitude', 'status', 'photo', 'user_id', 'sticker_type_id', 'last_checked_at'
     ];

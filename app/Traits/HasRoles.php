@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Models\AuditLog;
 use App\Models\Role;
 
 trait HasRoles
@@ -82,6 +83,14 @@ trait HasRoles
             $role = Role::where('name', $role)->firstOrFail();
         }
         $this->roles()->syncWithoutDetaching($role);
+
+        AuditLog::log(
+            'role_assigned',
+            "Assigned role '{$role->display_name}' to user: {$this->name}",
+            $this,
+            null,
+            ['role' => $role->display_name],
+        );
     }
 
     /**
@@ -93,6 +102,14 @@ trait HasRoles
             $role = Role::where('name', $role)->firstOrFail();
         }
         $this->roles()->detach($role);
+
+        AuditLog::log(
+            'role_removed',
+            "Removed role '{$role->display_name}' from user: {$this->name}",
+            $this,
+            ['role' => $role->display_name],
+            null,
+        );
     }
 
     /**
@@ -100,6 +117,18 @@ trait HasRoles
      */
     public function syncRoles(array $roleIds): void
     {
+        $oldRoles = $this->roles()->pluck('display_name')->toArray();
+
         $this->roles()->sync($roleIds);
+
+        $newRoles = $this->roles()->pluck('display_name')->toArray();
+
+        AuditLog::log(
+            'roles_synced',
+            "Synced roles for user: {$this->name}",
+            $this,
+            ['roles' => $oldRoles],
+            ['roles' => $newRoles],
+        );
     }
 }

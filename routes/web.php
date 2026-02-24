@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AuditLogController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\StickerTypeController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
@@ -81,6 +82,8 @@ Route::middleware('auth')->group(function () {
             Route::put('/sticker-types/{stickerType}', [StickerTypeController::class, 'update'])->name('admin.sticker-types.update');
             Route::delete('/sticker-types/{stickerType}', [StickerTypeController::class, 'destroy'])->name('admin.sticker-types.destroy');
         });
+
+        Route::get('/audit-log', [AuditLogController::class, 'index'])->middleware('permission:audit.view')->name('admin.audit-log.index');
     });
 });
 

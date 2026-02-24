@@ -6,6 +6,7 @@ use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\AuditLog;
 use App\Models\User;
 
 class AuthController extends Controller
@@ -35,9 +36,12 @@ class AuthController extends Controller
             // Auto-assign default member role to new users
             if ($user->wasRecentlyCreated) {
                 $user->assignRole('member');
+                AuditLog::log('created', "New user registered via OAuth: {$user->name}", $user, null, null, $user->id);
             }
 
             Auth::login($user, true);
+
+            AuditLog::log('login', "User logged in: {$user->name}", $user, null, null, $user->id);
 
             return redirect()->route('dashboard');
         } catch (\Exception $e) {
@@ -47,6 +51,10 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
+        $user = Auth::user();
+
+        AuditLog::log('logout', "User logged out: {$user->name}", $user);
+
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();

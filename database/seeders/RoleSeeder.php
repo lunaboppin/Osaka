@@ -32,6 +32,7 @@ class RoleSeeder extends Seeder
                 'sticker_types.manage',
                 'users.view_profiles',
                 'admin.access',
+                'audit.view',
             ],
         ]);
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AuditLog;
 use App\Models\Pin;
 use App\Models\PinUpdate;
 use App\Models\StickerType;
@@ -115,6 +116,11 @@ class ReminderController extends Controller
         }
 
         $count = count($validated['pin_ids']);
+
+        AuditLog::log(
+            'bulk_check',
+            "Bulk checked {$count} pin(s)",
+        );
 
         return back()->with('success', "{$count} pin(s) marked as checked!");
     }
