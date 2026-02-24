@@ -1,4 +1,6 @@
 <x-app-layout>
+    <x-slot name="pageTitle">All Pins</x-slot>
+
     <x-slot name="header">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <h2 class="text-xl font-bold text-osaka-charcoal">

@@ -1,4 +1,6 @@
 <x-app-layout>
+    <x-slot name="pageTitle">{{ $user->name }}'s Activity</x-slot>
+
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
         {{-- Header --}}
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
