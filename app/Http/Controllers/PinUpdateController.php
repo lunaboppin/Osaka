@@ -56,6 +56,7 @@ class PinUpdateController extends Controller
         $request->user()->refresh();
 
         // Discord webhook
+        $pin->load('stickerType');
         app(DiscordWebhookService::class)->notifyUpdatePosted($update, $pin, $request->user());
 
         $flash = 'Update added to timeline!';

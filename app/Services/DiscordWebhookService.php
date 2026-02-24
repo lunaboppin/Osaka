@@ -65,37 +65,65 @@ class DiscordWebhookService
 
     public function notifyPinCreated(\App\Models\Pin $pin, \App\Models\User $user): void
     {
-        $this->send('pin_created', [
+        $embed = [
             'title' => '📌 New Pin Created',
             'description' => "**{$pin->title}**" . ($pin->description ? "\n{$pin->description}" : ''),
+            'url' => route('pins.show', $pin),
             'color' => 0x10B981, // emerald
             'fields' => [
+                ['name' => 'Status', 'value' => $pin->status, 'inline' => true],
                 ['name' => 'Created by', 'value' => $user->name, 'inline' => true],
             ],
             'footer' => ['text' => 'Osaka • Pin Tracker'],
             'timestamp' => now()->toIso8601String(),
-        ]);
+        ];
+
+        if ($pin->stickerType) {
+            $embed['fields'][] = ['name' => 'Sticker Type', 'value' => $pin->stickerType->display_name, 'inline' => true];
+        }
+
+        if ($pin->latitude && $pin->longitude) {
+            $embed['fields'][] = ['name' => 'Location', 'value' => "[View on Map](" . route('dashboard') . "?lat={$pin->latitude}&lng={$pin->longitude})", 'inline' => true];
+        }
+
+        if ($pin->photo_url) {
+            $embed['image'] = ['url' => $pin->photo_url];
+        }
+
+        $this->send('pin_created', $embed);
     }
 
     public function notifyPinDeleted(\App\Models\Pin $pin, \App\Models\User $user): void
     {
-        $this->send('pin_deleted', [
+        $embed = [
             'title' => '🗑️ Pin Deleted',
-            'description' => "**{$pin->title}** was deleted.",
+            'description' => "**{$pin->title}** was deleted." . ($pin->description ? "\n{$pin->description}" : ''),
             'color' => 0xEF4444, // red
             'fields' => [
+                ['name' => 'Status', 'value' => $pin->status, 'inline' => true],
                 ['name' => 'Deleted by', 'value' => $user->name, 'inline' => true],
             ],
             'footer' => ['text' => 'Osaka • Pin Tracker'],
             'timestamp' => now()->toIso8601String(),
-        ]);
+        ];
+
+        if ($pin->stickerType) {
+            $embed['fields'][] = ['name' => 'Sticker Type', 'value' => $pin->stickerType->display_name, 'inline' => true];
+        }
+
+        if ($pin->photo_url) {
+            $embed['thumbnail'] = ['url' => $pin->photo_url];
+        }
+
+        $this->send('pin_deleted', $embed);
     }
 
     public function notifyUpdatePosted(\App\Models\PinUpdate $update, \App\Models\Pin $pin, \App\Models\User $user): void
     {
-        $this->send('update_posted', [
+        $embed = [
             'title' => '📝 Timeline Update',
             'description' => "New update on **{$pin->title}**" . ($update->notes ? "\n> {$update->notes}" : ''),
+            'url' => route('pins.show', $pin),
             'color' => 0xF59E0B, // amber
             'fields' => [
                 ['name' => 'Posted by', 'value' => $user->name, 'inline' => true],
@@ -103,7 +131,20 @@ class DiscordWebhookService
             ],
             'footer' => ['text' => 'Osaka • Pin Tracker'],
             'timestamp' => now()->toIso8601String(),
-        ]);
+        ];
+
+        if ($pin->stickerType) {
+            $embed['fields'][] = ['name' => 'Sticker Type', 'value' => $pin->stickerType->display_name, 'inline' => true];
+        }
+
+        // Show the update's photo if it has one, otherwise the pin's photo as thumbnail
+        if ($update->photo_url) {
+            $embed['image'] = ['url' => $update->photo_url];
+        } elseif ($pin->photo_url) {
+            $embed['thumbnail'] = ['url' => $pin->photo_url];
+        }
+
+        $this->send('update_posted', $embed);
     }
 
     public function notifyLevelUp(\App\Models\User $user, int $newLevel, string $levelName): void

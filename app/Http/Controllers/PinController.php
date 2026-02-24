@@ -127,6 +127,7 @@ class PinController extends Controller
         $request->user()->refresh();
 
         // Discord webhook
+        $pin->load('stickerType');
         app(DiscordWebhookService::class)->notifyPinCreated($pin, $request->user());
 
         if ($request->wantsJson() || $request->ajax()) {
@@ -253,6 +254,7 @@ class PinController extends Controller
         app(XpService::class)->deduct($user, 'pin_deleted', "Deleted pin: {$pin->title}", $pin);
 
         // Discord webhook
+        $pin->load('stickerType');
         app(DiscordWebhookService::class)->notifyPinDeleted($pin, $user);
 
         $pin->delete();
