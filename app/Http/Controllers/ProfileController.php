@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\StickerType;
 use App\Models\User;
+use App\Services\XpService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -92,6 +93,14 @@ class ProfileController extends Controller
         }
 
         $user->save();
+
+        // One-time profile completion XP
+        if ($user->bio && $user->avatar) {
+            $alreadyAwarded = $user->xpTransactions()->where('action', 'profile_completed')->exists();
+            if (!$alreadyAwarded) {
+                app(XpService::class)->award($user, 'profile_completed', 'Profile completed (bio & avatar set)');
+            }
+        }
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }

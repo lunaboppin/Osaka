@@ -74,6 +74,32 @@
             />
         </div>
 
+        {{-- Your XP Progress (auth only) --}}
+        @auth
+            <div class="card">
+                <div class="card-body">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                        <div class="flex items-center gap-4 flex-1 min-w-0">
+                            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-osaka-gold to-osaka-gold-light flex items-center justify-center text-lg font-bold text-osaka-charcoal shadow shrink-0">
+                                {{ Auth::user()->level }}
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <x-level-badge :user="Auth::user()" size="sm" />
+                                    <span class="text-sm text-gray-500">{{ number_format(Auth::user()->total_xp) }} XP</span>
+                                </div>
+                                <x-xp-progress-bar :user="Auth::user()" :showLabel="false" class="mt-1.5" />
+                            </div>
+                        </div>
+                        <a href="{{ route('leaderboard') }}" class="btn-gold text-sm shrink-0">
+                            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+                            Leaderboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        @endauth
+
         {{-- Overdue Callout Banner --}}
         @auth
             @if($stats['overdue'] > 0)

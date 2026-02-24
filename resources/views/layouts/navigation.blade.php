@@ -36,6 +36,11 @@
                             <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
                             Reminders
                         </a>
+                        <a href="{{ route('leaderboard') }}"
+                           class="inline-flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all duration-200 {{ request()->routeIs('leaderboard') ? 'text-osaka-gold bg-white/10' : 'text-osaka-cream/70 hover:text-osaka-cream hover:bg-white/5' }}">
+                            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+                            Leaderboard
+                        </a>
                         @if(Auth::user()->hasPermission('admin.access'))
                             <x-dropdown align="left" width="48">
                                 <x-slot name="trigger">
@@ -85,6 +90,11 @@
                         @endif
                     @endauth
                     @guest
+                        <a href="{{ route('leaderboard') }}"
+                           class="inline-flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all duration-200 {{ request()->routeIs('leaderboard') ? 'text-osaka-gold bg-white/10' : 'text-osaka-cream/70 hover:text-osaka-cream hover:bg-white/5' }}">
+                            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+                            Leaderboard
+                        </a>
                         <a href="{{ route('login') }}"
                            class="inline-flex items-center px-3 py-2 text-sm font-medium text-osaka-cream/70 hover:text-osaka-cream hover:bg-white/5 rounded-md transition-all duration-200">
                             <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
@@ -167,6 +177,12 @@
                             <x-dropdown-link :href="route('profile.edit')">
                                 {{ __('Edit Profile') }}
                             </x-dropdown-link>
+                            <div class="px-4 py-2">
+                                <x-level-badge :user="Auth::user()" size="xs" />
+                                <div class="mt-1">
+                                    <x-xp-progress-bar :user="Auth::user()" :showLabel="false" height="h-1.5" />
+                                </div>
+                            </div>
                             <div class="border-t border-gray-100 my-1"></div>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
@@ -214,6 +230,10 @@
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
                     Reminders
                 </a>
+                <a href="{{ route('leaderboard') }}" class="flex items-center px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('leaderboard') ? 'text-osaka-gold bg-white/10' : 'text-osaka-cream/70 hover:text-osaka-cream hover:bg-white/5' }}">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+                    Leaderboard
+                </a>
                 @if(Auth::user()->hasPermission('admin.access'))
                     <div class="pt-3 pb-2 border-t border-white/10 px-4">
                         <div class="text-xs font-semibold text-osaka-cream/40 uppercase tracking-wider mb-2 px-3">Admin</div>
@@ -245,6 +265,10 @@
                 @endif
             @endauth
             @guest
+                <a href="{{ route('leaderboard') }}" class="flex items-center px-3 py-2 rounded-md text-sm font-medium {{ request()->routeIs('leaderboard') ? 'text-osaka-gold bg-white/10' : 'text-osaka-cream/70 hover:text-osaka-cream hover:bg-white/5' }}">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
+                    Leaderboard
+                </a>
                 <a href="{{ route('login') }}" class="flex items-center px-3 py-2 rounded-md text-sm font-medium text-osaka-cream/70 hover:text-osaka-cream hover:bg-white/5">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
                     Login
@@ -292,6 +316,9 @@
                     <div>
                         <div class="font-medium text-sm text-osaka-cream">{{ Auth::user()->name }}</div>
                         <div class="font-medium text-xs text-osaka-cream/50">{{ Auth::user()->email }}</div>
+                        <div class="mt-1">
+                            <x-level-badge :user="Auth::user()" size="xs" />
+                        </div>
                     </div>
                 </div>
                 <div class="space-y-1">

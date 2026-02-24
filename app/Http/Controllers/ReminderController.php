@@ -6,6 +6,7 @@ use App\Models\AuditLog;
 use App\Models\Pin;
 use App\Models\PinUpdate;
 use App\Models\StickerType;
+use App\Services\XpService;
 use Illuminate\Http\Request;
 
 class ReminderController extends Controller
@@ -68,14 +69,15 @@ class ReminderController extends Controller
 
         $pin->update(['last_checked_at' => now()]);
 
-        // Record a timeline entry for the check
+        // Record a timeline entry for the check (note only, no status/photo snapshot)
         PinUpdate::create([
             'pin_id' => $pin->id,
             'user_id' => $request->user()->id,
-            'status' => $pin->status,
-            'photo' => $pin->photo,
             'notes' => 'Marked as checked — no changes.',
         ]);
+
+        // Award XP
+        app(XpService::class)->award($request->user(), 'pin_checked', "Checked pin: {$pin->title}", $pin);
 
         if ($request->wantsJson() || $request->ajax()) {
             return response()->json([
@@ -103,16 +105,16 @@ class ReminderController extends Controller
 
         Pin::whereIn('id', $validated['pin_ids'])->update(['last_checked_at' => now()]);
 
-        // Record timeline entries for bulk checks
+        // Record timeline entries for bulk checks (note only, no status/photo snapshot)
         $pins = Pin::whereIn('id', $validated['pin_ids'])->get();
+        $xp = app(XpService::class);
         foreach ($pins as $pin) {
             PinUpdate::create([
                 'pin_id' => $pin->id,
                 'user_id' => $request->user()->id,
-                'status' => $pin->status,
-                'photo' => $pin->photo,
                 'notes' => 'Marked as checked — no changes.',
             ]);
+            $xp->award($request->user(), 'pin_checked', "Checked pin: {$pin->title}", $pin);
         }
 
         $count = count($validated['pin_ids']);

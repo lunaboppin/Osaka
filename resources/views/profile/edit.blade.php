@@ -122,6 +122,34 @@
             </div>
         </div>
 
+        {{-- XP & Level Card --}}
+        <div class="card">
+            <div class="card-body">
+                <h3 class="text-lg font-bold text-osaka-charcoal mb-3 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-osaka-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    Your Level
+                </h3>
+                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                    <div class="flex items-center gap-4 flex-1">
+                        <div class="w-14 h-14 rounded-full bg-gradient-to-br from-osaka-gold to-osaka-gold-light flex items-center justify-center text-xl font-bold text-osaka-charcoal shadow shrink-0">
+                            {{ $user->level }}
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <x-level-badge :user="$user" size="sm" />
+                                <span class="text-sm text-gray-500">{{ number_format($user->total_xp) }} XP</span>
+                            </div>
+                            <x-xp-progress-bar :user="$user" :showLabel="true" class="mt-2" />
+                        </div>
+                    </div>
+                    <a href="{{ route('users.activity', $user) }}" class="btn-secondary text-sm shrink-0">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                        View Activity
+                    </a>
+                </div>
+            </div>
+        </div>
+
         {{-- Pin Statistics --}}
         <div>
             <h3 class="text-lg font-bold text-osaka-charcoal mb-3 flex items-center">

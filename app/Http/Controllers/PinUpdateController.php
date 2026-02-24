@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Pin;
 use App\Models\PinUpdate;
+use App\Services\XpService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -44,7 +45,20 @@ class PinUpdateController extends Controller
         }
         $pin->update($pinData);
 
-        return redirect()->route('pins.show', $pin)->with('success', 'Update added to timeline!');
+        // Award XP
+        $xp = app(XpService::class);
+        $oldLevel = $request->user()->level;
+        $xp->award($request->user(), 'update_posted', "Posted update on pin: {$pin->title}", $update);
+        if ($photoPath) {
+            $xp->award($request->user(), 'photo_added', "Added photo to update on pin: {$pin->title}", $update);
+        }
+        $request->user()->refresh();
+        $flash = 'Update added to timeline!';
+        if ($request->user()->level > $oldLevel) {
+            $flash .= " Level up! You're now Level {$request->user()->level} — {$request->user()->level_name}!";
+        }
+
+        return redirect()->route('pins.show', $pin)->with('success', $flash);
     }
 
     /**

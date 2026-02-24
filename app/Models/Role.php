@@ -39,6 +39,8 @@ class Role extends Model
             'users.manage' => 'Manage users & assign roles',
             'admin.access' => 'Access admin panel',
             'audit.view' => 'View audit log',
+            'leaderboard.view' => 'View leaderboard',
+            'xp.view_activity' => 'View XP activity pages',
         ];
     }
 

@@ -6,11 +6,13 @@ use App\Http\Controllers\Admin\StickerTypeController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LeaderboardController;
 use App\Http\Controllers\PinController;
 use App\Http\Controllers\PinUpdateController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReminderController;
 use App\Http\Controllers\StickerTypeSwitchController;
+use App\Http\Controllers\UserActivityController;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Route;
 
@@ -18,11 +20,15 @@ use Illuminate\Support\Facades\Route;
 // Public dashboard
 Route::get('/', DashboardController::class)->name('dashboard');
 
+// Public leaderboard
+Route::get('/leaderboard', [LeaderboardController::class, 'index'])->name('leaderboard');
+
 // Always accessible: pins JSON endpoint
 Route::get('/pins/json', [PinController::class, 'json'])->name('pins.json');
 
 // Profile pages (require auth + permission)
 Route::get('/users/{user}', [ProfileController::class, 'show'])->middleware(['auth', 'permission:users.view_profiles'])->name('profile.show');
+Route::get('/users/{user}/activity', [UserActivityController::class, 'show'])->middleware(['auth', 'permission:xp.view_activity'])->name('users.activity');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', function () {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Pin;
 use App\Models\PinUpdate;
 use App\Models\StickerType;
+use App\Services\XpService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -115,11 +116,25 @@ class PinController extends Controller
             'notes' => 'Initial pin creation.',
         ]);
 
+        // Award XP
+        $xp = app(XpService::class);
+        $oldLevel = $request->user()->level;
+        $xp->award($request->user(), 'pin_created', "Created pin: {$pin->title}", $pin);
+        if ($request->hasFile('photo')) {
+            $xp->award($request->user(), 'photo_added', "Added photo to pin: {$pin->title}", $pin);
+        }
+        $request->user()->refresh();
+
         if ($request->wantsJson() || $request->ajax()) {
             return response()->json(['message' => 'Pin added successfully!', 'pin' => $pin], 201);
         }
 
-        return redirect()->route('pins.show', $pin)->with('success', 'Pin added!');
+        $flash = 'Pin added!';
+        if ($request->user()->level > $oldLevel) {
+            $flash .= " Level up! You're now Level {$request->user()->level} — {$request->user()->level_name}!";
+        }
+
+        return redirect()->route('pins.show', $pin)->with('success', $flash);
     }
 
     public function edit(Pin $pin)
@@ -197,7 +212,22 @@ class PinController extends Controller
             $pin->update(['last_checked_at' => now()]);
         }
 
-        return redirect()->route('pins.show', $pin)->with('success', 'Pin updated!');
+        // Award XP for meaningful edits
+        $xp = app(XpService::class);
+        $oldLevel = $request->user()->level;
+        if ($statusChanged || $photoChanged) {
+            $xp->award($request->user(), 'pin_updated', "Updated pin: {$pin->title}", $pin);
+        }
+        if ($photoChanged && $pin->photo && $request->hasFile('photo')) {
+            $xp->award($request->user(), 'photo_added', "Added photo to pin: {$pin->title}", $pin);
+        }
+        $request->user()->refresh();
+        $flash = 'Pin updated!';
+        if ($request->user()->level > $oldLevel) {
+            $flash .= " Level up! You're now Level {$request->user()->level} — {$request->user()->level_name}!";
+        }
+
+        return redirect()->route('pins.show', $pin)->with('success', $flash);
     }
 
     public function destroy(Pin $pin)
@@ -214,6 +244,9 @@ class PinController extends Controller
         if ($pin->photo) {
             Storage::disk('public')->delete($pin->photo);
         }
+
+        // Deduct XP
+        app(XpService::class)->deduct($user, 'pin_deleted', "Deleted pin: {$pin->title}", $pin);
 
         $pin->delete();
         return redirect()->route('pins.index')->with('success', 'Pin deleted!');

@@ -33,6 +33,8 @@ class RoleSeeder extends Seeder
                 'users.view_profiles',
                 'admin.access',
                 'audit.view',
+                'leaderboard.view',
+                'xp.view_activity',
             ],
         ]);
 
@@ -48,6 +50,8 @@ class RoleSeeder extends Seeder
                 'updates.create',
                 'updates.delete_own',
                 'users.view_profiles',
+                'leaderboard.view',
+                'xp.view_activity',
             ],
         ]);
     }

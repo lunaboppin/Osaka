@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Services\XpService;
 use App\Traits\Auditable;
 use App\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,7 +18,7 @@ class User extends Authenticatable
     /**
      * Attributes excluded from audit logging.
      */
-    protected array $auditExclude = ['remember_token'];
+    protected array $auditExclude = ['remember_token', 'total_xp'];
 
     /**
      * The attributes that are mass assignable.
@@ -31,6 +32,13 @@ class User extends Authenticatable
         'avatar',
         'bio',
         'default_sticker_type_id',
+        'total_xp',
+        'xp_backfilled_at',
+    ];
+
+    protected $casts = [
+        'total_xp' => 'integer',
+        'xp_backfilled_at' => 'datetime',
     ];
 
     public function pins()
@@ -43,11 +51,48 @@ class User extends Authenticatable
         return $this->belongsTo(StickerType::class, 'default_sticker_type_id');
     }
 
+    public function xpTransactions()
+    {
+        return $this->hasMany(XpTransaction::class);
+    }
+
     /**
      * Get the user's display avatar URL.
      */
     public function getAvatarUrlAttribute(): ?string
     {
         return $this->avatar;
+    }
+
+    // ── XP / Levelling accessors ────────────────────────────
+
+    public function getLevelAttribute(): int
+    {
+        return app(XpService::class)->getLevel($this->total_xp ?? 0);
+    }
+
+    public function getLevelNameAttribute(): string
+    {
+        return app(XpService::class)->getLevelName($this->level);
+    }
+
+    public function getXpForNextLevelAttribute(): ?int
+    {
+        return app(XpService::class)->getXpForNextLevel($this->total_xp ?? 0);
+    }
+
+    public function getLevelProgressAttribute(): float
+    {
+        return app(XpService::class)->getLevelProgress($this->total_xp ?? 0);
+    }
+
+    public function getCurrentLevelThresholdAttribute(): int
+    {
+        return app(XpService::class)->getCurrentLevelThreshold($this->total_xp ?? 0);
+    }
+
+    public function getNextLevelThresholdAttribute(): ?int
+    {
+        return app(XpService::class)->getNextLevelThreshold($this->total_xp ?? 0);
     }
 }
