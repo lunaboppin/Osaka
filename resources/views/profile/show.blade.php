@@ -17,17 +17,16 @@
                 @endif
             </div>
 
-            <div class="card-body relative">
-                <div class="flex flex-col sm:flex-row items-start gap-6 -mt-16 sm:-mt-14">
-                    {{-- Framed Avatar --}}
-                    <div class="shrink-0">
-                        <x-framed-avatar :user="$user" size="lg" />
-                    </div>
+            <div class="card-body relative pt-16 sm:pt-6">
+                {{-- Avatar floated over the banner --}}
+                <div class="absolute -top-14 left-6">
+                    <x-framed-avatar :user="$user" size="lg" />
+                </div>
 
-                    {{-- Info --}}
-                    <div class="flex-1 pt-12 sm:pt-4">
-                        <div class="flex items-center gap-3 flex-wrap">
-                            <h1 class="text-2xl font-bold text-osaka-charcoal">{{ $user->name }}</h1>
+                {{-- Info — sits entirely on the white card, offset right on desktop to avoid avatar --}}
+                <div class="sm:ml-32">
+                    <div class="flex items-center gap-3 flex-wrap">
+                        <h1 class="text-2xl font-bold text-osaka-charcoal">{{ $user->name }}</h1>
                             {{-- Role badges --}}
                             @foreach($user->roles->sortByDesc('priority') as $role)
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold text-white" style="background-color: {{ $role->color }}">
@@ -66,7 +65,6 @@
                                 </a>
                             @endif
                         @endauth
-                    </div>
                 </div>
             </div>
 
