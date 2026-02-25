@@ -85,3 +85,16 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
+
+/* Prismatic avatar frame animation */
+.prismatic-border {
+    animation: prismatic-shift 3s linear infinite;
+}
+
+@keyframes prismatic-shift {
+    0%   { --tw-ring-color: rgb(168 85 247 / 0.4); border-color: #a855f7; }
+    25%  { --tw-ring-color: rgb(236 72 153 / 0.4); border-color: #ec4899; }
+    50%  { --tw-ring-color: rgb(34 211 238 / 0.4); border-color: #22d3ee; }
+    75%  { --tw-ring-color: rgb(250 204 21 / 0.4); border-color: #facc15; }
+    100% { --tw-ring-color: rgb(168 85 247 / 0.4); border-color: #a855f7; }
+}

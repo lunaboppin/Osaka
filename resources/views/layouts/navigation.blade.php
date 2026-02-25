@@ -173,13 +173,7 @@
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
                             <button class="inline-flex items-center px-3 py-2 text-sm font-medium rounded-md text-osaka-cream/80 hover:text-osaka-cream hover:bg-white/5 focus:outline-none transition-all duration-200">
-                                @if(Auth::user()->avatar)
-                                    <img src="{{ Auth::user()->avatar }}" alt="" class="w-7 h-7 rounded-full mr-2 border-2 border-osaka-gold/50">
-                                @else
-                                    <div class="w-7 h-7 rounded-full bg-osaka-gold mr-2 flex items-center justify-center text-xs font-bold text-osaka-charcoal">
-                                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                                    </div>
-                                @endif
+                                <x-framed-avatar :user="Auth::user()" size="xs" class="mr-2" />
                                 <span>{{ Auth::user()->name }}</span>
                                 <svg class="fill-current h-4 w-4 ml-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
@@ -334,13 +328,7 @@
         @auth
             <div class="pt-4 pb-3 border-t border-white/10 px-4">
                 <div class="flex items-center mb-3">
-                    @if(Auth::user()->avatar)
-                        <img src="{{ Auth::user()->avatar }}" alt="" class="w-8 h-8 rounded-full mr-3 border-2 border-osaka-gold/50">
-                    @else
-                        <div class="w-8 h-8 rounded-full bg-osaka-gold mr-3 flex items-center justify-center text-sm font-bold text-osaka-charcoal">
-                            {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                        </div>
-                    @endif
+                    <x-framed-avatar :user="Auth::user()" size="sm" class="mr-3" />
                     <div>
                         <div class="font-medium text-sm text-osaka-cream">{{ Auth::user()->name }}</div>
                         <div class="font-medium text-xs text-osaka-cream/50">{{ Auth::user()->email }}</div>

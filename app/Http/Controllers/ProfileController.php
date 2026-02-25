@@ -60,6 +60,8 @@ class ProfileController extends Controller
             'pinStats' => $pinStats,
             'recentPins' => $recentPins,
             'stickerTypes' => StickerType::ordered()->get(),
+            'themes' => config('osaka.profile.themes', []),
+            'avatarFrames' => config('osaka.profile.avatar_frames', []),
         ]);
     }
 
@@ -76,7 +78,6 @@ class ProfileController extends Controller
 
         // Handle avatar upload
         if ($request->hasFile('avatar')) {
-            // Delete old uploaded avatar if it's a local file
             if ($user->avatar && str_starts_with($user->avatar, '/storage/')) {
                 Storage::disk('public')->delete(str_replace('/storage/', '', $user->avatar));
             }
@@ -90,6 +91,62 @@ class ProfileController extends Controller
                 Storage::disk('public')->delete(str_replace('/storage/', '', $user->avatar));
             }
             $user->avatar = null;
+        }
+
+        // Handle banner upload
+        if ($request->hasFile('banner')) {
+            if ($user->banner_path) {
+                Storage::disk('public')->delete($user->banner_path);
+            }
+            $user->banner_path = $request->file('banner')->store('banners', 'public');
+        }
+
+        // Handle banner removal
+        if ($request->boolean('remove_banner')) {
+            if ($user->banner_path) {
+                Storage::disk('public')->delete($user->banner_path);
+            }
+            $user->banner_path = null;
+        }
+
+        // Handle accent colour
+        if ($request->boolean('clear_accent_color')) {
+            $user->accent_color = null;
+        } elseif ($request->filled('accent_color')) {
+            $user->accent_color = $request->input('accent_color');
+        }
+
+        // Handle profile theme (validate level requirement)
+        if ($request->filled('profile_theme')) {
+            $theme = $request->input('profile_theme');
+            $themeConfig = config("osaka.profile.themes.{$theme}");
+            if ($themeConfig && ($themeConfig['min_level'] ?? 1) <= $user->level) {
+                $user->profile_theme = $theme;
+            }
+        }
+
+        // Handle avatar frame (validate level requirement)
+        if ($request->has('avatar_frame')) {
+            $frame = $request->input('avatar_frame');
+            if ($frame === '' || $frame === 'none') {
+                $user->avatar_frame = null;
+            } else {
+                $frameConfig = config("osaka.profile.avatar_frames.{$frame}");
+                if ($frameConfig && ($frameConfig['min_level'] ?? 1) <= $user->level) {
+                    $user->avatar_frame = $frame;
+                }
+            }
+        }
+
+        // Handle displayed badges (validate they're actually available)
+        if ($request->has('displayed_badges')) {
+            $requested = $request->input('displayed_badges', []);
+            $maxBadges = config('osaka.profile.max_displayed_badges', 5);
+            $user->displayed_badges = collect($requested)
+                ->filter(fn($key) => isset($user->available_badges[$key]))
+                ->take($maxBadges)
+                ->values()
+                ->all();
         }
 
         $user->save();

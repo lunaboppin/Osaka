@@ -70,4 +70,121 @@ return [
         ],
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Profile Customisation
+    |--------------------------------------------------------------------------
+    |
+    | Visual customisation options for user profiles — themes, avatar frames,
+    | and badge display configuration.
+    |
+    */
+
+    'profile' => [
+        // Preset profile themes. Each theme defines colours used on the
+        // public profile card (banner overlay, accent, text colours).
+        'themes' => [
+            'default' => [
+                'label' => 'Default',
+                'accent' => '#D4A843',
+                'banner_bg' => 'bg-gradient-to-r from-osaka-charcoal to-osaka-charcoal-light',
+                'banner_text' => 'text-osaka-cream',
+                'card_border' => 'border-osaka-gold/20',
+                'min_level' => 1,
+            ],
+            'osaka_night' => [
+                'label' => 'Osaka Night',
+                'accent' => '#8B5CF6',
+                'banner_bg' => 'bg-gradient-to-r from-violet-950 via-indigo-950 to-slate-900',
+                'banner_text' => 'text-violet-100',
+                'card_border' => 'border-violet-400/30',
+                'min_level' => 3,
+            ],
+            'cherry_blossom' => [
+                'label' => 'Cherry Blossom',
+                'accent' => '#EC4899',
+                'banner_bg' => 'bg-gradient-to-r from-pink-200 via-rose-200 to-pink-300',
+                'banner_text' => 'text-pink-900',
+                'card_border' => 'border-pink-300/40',
+                'min_level' => 4,
+            ],
+            'neon' => [
+                'label' => 'Neon',
+                'accent' => '#22D3EE',
+                'banner_bg' => 'bg-gradient-to-r from-gray-900 via-cyan-950 to-gray-900',
+                'banner_text' => 'text-cyan-300',
+                'card_border' => 'border-cyan-400/30',
+                'min_level' => 5,
+            ],
+            'ember' => [
+                'label' => 'Ember',
+                'accent' => '#F97316',
+                'banner_bg' => 'bg-gradient-to-r from-orange-950 via-red-950 to-amber-950',
+                'banner_text' => 'text-orange-200',
+                'card_border' => 'border-orange-400/30',
+                'min_level' => 6,
+            ],
+            'arctic' => [
+                'label' => 'Arctic',
+                'accent' => '#38BDF8',
+                'banner_bg' => 'bg-gradient-to-r from-sky-100 via-blue-100 to-indigo-100',
+                'banner_text' => 'text-sky-900',
+                'card_border' => 'border-sky-300/40',
+                'min_level' => 7,
+            ],
+            'legendary' => [
+                'label' => 'Legendary',
+                'accent' => '#FBBF24',
+                'banner_bg' => 'bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500',
+                'banner_text' => 'text-amber-950',
+                'card_border' => 'border-amber-400/50',
+                'min_level' => 10,
+            ],
+        ],
+
+        // Avatar frames — decorative borders unlocked by level.
+        // CSS classes are applied to the avatar wrapper.
+        'avatar_frames' => [
+            'none' => [
+                'label' => 'None',
+                'border_class' => 'border-4 border-osaka-gold/30',
+                'ring_class' => '',
+                'min_level' => 1,
+            ],
+            'bronze' => [
+                'label' => 'Bronze',
+                'border_class' => 'border-4 border-amber-600',
+                'ring_class' => 'ring-2 ring-amber-600/30 ring-offset-2 ring-offset-white',
+                'min_level' => 2,
+            ],
+            'silver' => [
+                'label' => 'Silver',
+                'border_class' => 'border-4 border-gray-400',
+                'ring_class' => 'ring-2 ring-gray-400/30 ring-offset-2 ring-offset-white',
+                'min_level' => 4,
+            ],
+            'gold' => [
+                'label' => 'Gold',
+                'border_class' => 'border-4 border-osaka-gold',
+                'ring_class' => 'ring-2 ring-osaka-gold/40 ring-offset-2 ring-offset-white',
+                'min_level' => 6,
+            ],
+            'diamond' => [
+                'label' => 'Diamond',
+                'border_class' => 'border-4 border-cyan-400',
+                'ring_class' => 'ring-2 ring-cyan-400/40 ring-offset-2 ring-offset-white',
+                'min_level' => 8,
+            ],
+            'prismatic' => [
+                'label' => 'Prismatic',
+                'border_class' => 'border-4 border-transparent bg-clip-border',
+                'ring_class' => 'ring-2 ring-purple-400/40 ring-offset-2 ring-offset-white prismatic-border',
+                'min_level' => 10,
+            ],
+        ],
+
+        // Maximum number of badges a user can pin to their profile
+        'max_displayed_badges' => 5,
+    ],
+
 ];

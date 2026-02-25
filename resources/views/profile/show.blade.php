@@ -1,24 +1,31 @@
 <x-app-layout>
     <x-slot name="pageTitle">{{ $user->name }}'s Profile</x-slot>
 
+    @php
+        $themeConfig = $user->theme_config;
+    @endphp
+
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-        {{-- Profile Header Card --}}
-        <div class="card">
-            <div class="card-body">
+        {{-- Profile Header Card with Banner --}}
+        <div class="card overflow-hidden {{ $themeConfig['card_border'] ?? 'border-osaka-gold/20' }}"
+             @if($user->accent_color) style="border-color: {{ $user->accent_color }}33" @endif>
+            {{-- Banner --}}
+            <div class="relative h-36 sm:h-44 {{ $user->banner_url ? '' : ($themeConfig['banner_bg'] ?? 'bg-gradient-to-r from-osaka-charcoal to-osaka-charcoal-light') }}">
+                @if($user->banner_url)
+                    <img src="{{ $user->banner_url }}" alt="" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                @endif
+            </div>
+
+            <div class="card-body -mt-14 relative">
                 <div class="flex flex-col sm:flex-row items-start gap-6">
-                    {{-- Avatar --}}
+                    {{-- Framed Avatar --}}
                     <div class="shrink-0">
-                        @if($user->avatar)
-                            <img src="{{ $user->avatar }}" alt="{{ $user->name }}" class="w-24 h-24 rounded-full object-cover border-4 border-osaka-gold/30 shadow">
-                        @else
-                            <div class="w-24 h-24 rounded-full bg-osaka-gold flex items-center justify-center text-3xl font-bold text-osaka-charcoal border-4 border-osaka-gold/30 shadow">
-                                {{ strtoupper(substr($user->name, 0, 1)) }}
-                            </div>
-                        @endif
+                        <x-framed-avatar :user="$user" size="lg" />
                     </div>
 
                     {{-- Info --}}
-                    <div class="flex-1">
+                    <div class="flex-1 pt-8 sm:pt-0">
                         <div class="flex items-center gap-3 flex-wrap">
                             <h1 class="text-2xl font-bold text-osaka-charcoal">{{ $user->name }}</h1>
                             {{-- Role badges --}}
@@ -31,6 +38,13 @@
 
                         @if($user->bio)
                             <p class="mt-2 text-gray-600 leading-relaxed">{{ $user->bio }}</p>
+                        @endif
+
+                        {{-- Displayed badges --}}
+                        @if(count($user->displayed_badge_details) > 0)
+                            <div class="mt-3">
+                                <x-profile-badges :badges="$user->displayed_badge_details" />
+                            </div>
                         @endif
 
                         <div class="flex items-center gap-4 mt-3 text-sm text-gray-400">
@@ -55,6 +69,9 @@
                     </div>
                 </div>
             </div>
+
+            {{-- Theme accent bar --}}
+            <div class="h-1" style="background-color: {{ $user->effective_accent_color }}"></div>
         </div>
 
         {{-- XP & Level Card --}}

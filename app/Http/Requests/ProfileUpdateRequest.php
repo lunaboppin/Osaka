@@ -21,6 +21,14 @@ class ProfileUpdateRequest extends FormRequest
             'avatar' => ['nullable', 'image', 'max:102400'],
             'remove_avatar' => ['nullable', 'boolean'],
             'default_sticker_type_id' => ['nullable', 'exists:sticker_types,id'],
+            'banner' => ['nullable', 'image', 'max:102400'],
+            'remove_banner' => ['nullable', 'boolean'],
+            'accent_color' => ['nullable', 'string', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+            'clear_accent_color' => ['nullable', 'boolean'],
+            'profile_theme' => ['nullable', 'string', 'max:30'],
+            'avatar_frame' => ['nullable', 'string', 'max:30'],
+            'displayed_badges' => ['nullable', 'array', 'max:' . config('osaka.profile.max_displayed_badges', 5)],
+            'displayed_badges.*' => ['string', 'max:50'],
         ];
     }
 }
