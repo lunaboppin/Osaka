@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use Laravel\Socialite\Facades\Socialite;
+use Laravel\Socialite\Two\InvalidStateException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -19,7 +20,13 @@ class AuthController extends Controller
     public function callback()
     {
         try {
-            $authentikUser = Socialite::driver('authentik')->user();
+            $driver = Socialite::driver('authentik');
+
+            try {
+                $authentikUser = $driver->user();
+            } catch (InvalidStateException $e) {
+                $authentikUser = $driver->stateless()->user();
+            }
 
             $user = User::updateOrCreate([
                 'email' => $authentikUser->getEmail(),
@@ -45,7 +52,9 @@ class AuthController extends Controller
 
             return redirect()->route('dashboard');
         } catch (\Exception $e) {
-            return redirect('/login')->withErrors(['error' => 'Authentication failed.']);
+            report($e);
+
+            return redirect('/')->with('error', 'Authentication failed. Please try again. If this keeps happening, clear cookies for both the app and identity domains.');
         }
     }
 
