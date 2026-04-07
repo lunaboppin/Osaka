@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
+use GuzzleHttp\Exception\ClientException;
+use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\InvalidStateException;
 use Illuminate\Support\Facades\Auth;
@@ -26,6 +28,19 @@ class AuthController extends Controller
                 $authentikUser = $driver->user();
             } catch (InvalidStateException $e) {
                 $authentikUser = $driver->stateless()->user();
+            } catch (ClientException $e) {
+                $response = $e->getResponse();
+
+                Log::error('Authentik token exchange failed', [
+                    'status' => $response ? $response->getStatusCode() : null,
+                    'headers' => $response ? $response->getHeaders() : null,
+                    'body_snippet' => $response ? mb_substr((string) $response->getBody(), 0, 1500) : null,
+                    'request_url' => $request->fullUrl(),
+                    'has_code' => $request->has('code'),
+                    'has_state' => $request->has('state'),
+                ]);
+
+                throw $e;
             }
 
             $user = User::updateOrCreate([
