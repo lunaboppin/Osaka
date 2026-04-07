@@ -17,7 +17,7 @@ class AuthController extends Controller
         return Socialite::driver('authentik')->redirect();
     }
 
-    public function callback()
+    public function callback(Request $request)
     {
         try {
             $driver = Socialite::driver('authentik');
@@ -46,7 +46,8 @@ class AuthController extends Controller
                 AuditLog::log('created', "New user registered via OAuth: {$user->name}", $user, null, null, $user->id);
             }
 
-            Auth::login($user, true);
+            Auth::login($user);
+            $request->session()->regenerate();
 
             AuditLog::log('login', "User logged in: {$user->name}", $user, null, null, $user->id);
 
